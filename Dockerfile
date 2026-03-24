@@ -1,23 +1,24 @@
 FROM node:20-alpine AS deps
 WORKDIR /app
 COPY package*.json ./
-# Copiamos la carpeta de prisma para generar el cliente
-COPY panariapos-api/prisma ./panariapos-api/prisma
+# Copiamos el esquema para que el install pueda generar tipos si es necesario
+COPY panariapos-api/prisma ./prisma/ 
 RUN npm install
 
 FROM node:20-alpine AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
-# Copiamos solo lo que Next.js necesita para el build
 COPY package*.json ./
 COPY tsconfig.json ./
-COPY next.config.mjs ./
+# --- CAMBIO AQUÍ: Usamos .ts ---
+COPY next.config.ts ./  
 COPY tailwind.config.ts ./
 COPY src ./src
 COPY public ./public
-COPY panariapos-api/prisma ./panariapos-api/prisma
+# Volvemos a copiar el esquema a la ruta que espera el comando generate
+COPY panariapos-api/prisma ./panariapos-api/prisma 
 
-# Generamos prisma antes del build
+# Generamos prisma antes del build (Forzamos v6 para evitar P1012)
 RUN npx prisma@6 generate --schema=./panariapos-api/prisma/schema.prisma
 
 ENV NEXT_TELEMETRY_DISABLED=1
