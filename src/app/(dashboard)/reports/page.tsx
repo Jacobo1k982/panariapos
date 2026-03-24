@@ -268,16 +268,30 @@ export default function ReportsPage() {
                         <ResponsiveContainer width="100%" height={160}>
                             <PieChart>
                                 <Pie
-                                    data={BY_CATEGORY} cx="50%" cy="50%"
-                                    innerRadius={48} outerRadius={72}
-                                    paddingAngle={3} dataKey="value"
+                                    data={BY_CATEGORY}
+                                    cx="50%"
+                                    cy="50%"
+                                    innerRadius={48}
+                                    outerRadius={72}
+                                    paddingAngle={3}
+                                    dataKey="value"
                                 >
                                     {BY_CATEGORY.map((entry, i) => (
                                         <Cell key={i} fill={entry.color} strokeWidth={0} />
                                     ))}
                                 </Pie>
-                                <Tooltip formatter={(v: number | string | undefined) => [`${v}${typeof v === 'number' ? '%' : ''}`, '']} ... />
-                                contentStyle={{ background: '#1e2333', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '8px', fontSize: '12px' }} />
+                                {/* Tooltip corregido sin los "..." y con cierre único */}
+                                <Tooltip
+                                    formatter={(v: any) => [`${v}%`, 'Porcentaje']}
+                                    contentStyle={{
+                                        background: '#1e2333',
+                                        border: '1px solid rgba(255,255,255,0.08)',
+                                        borderRadius: '8px',
+                                        fontSize: '12px',
+                                        color: '#fff'
+                                    }}
+                                    itemStyle={{ color: '#fff' }}
+                                />
                             </PieChart>
                         </ResponsiveContainer>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', width: '100%' }}>
