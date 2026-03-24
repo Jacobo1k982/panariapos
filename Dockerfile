@@ -1,18 +1,21 @@
 FROM node:20-alpine AS deps
 WORKDIR /app
 COPY package*.json ./
-# Copiamos el schema a la carpeta estándar /app/prisma
-COPY panariapos-api/prisma ./prisma/ 
+# 1. Copiamos el esquema a una carpeta fija para que npm install genere tipos si hay un script postinstall
+COPY panariapos-api/prisma ./prisma/
 RUN npm install
 
 FROM node:20-alpine AS builder
 WORKDIR /app
+# 2. Traemos node_modules (donde está el binario de prisma)
 COPY --from=deps /app/node_modules ./node_modules
+# 3. Copiamos todo el proyecto
 COPY . .
 
-# --- CORRECCIÓN CLAVE ---
-# Usamos el binario local y la ruta donde copiamos el schema en el stage 'deps'
-RUN ./node_modules/.bin/prisma generate --schema=./prisma/schema.prisma
+# --- LA CORRECCIÓN DE RUTA ---
+# Como hiciste COPY . . , el esquema está en panariapos-api/prisma/schema.prisma
+# Usamos npx prisma@6 para asegurar la versión y la ruta real del archivo
+RUN npx prisma@6 generate --schema=./panariapos-api/prisma/schema.prisma
 
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV NEXT_PUBLIC_API_URL=https://panariapos.com/api/v1
@@ -29,7 +32,7 @@ RUN adduser --system --uid 1001 nextjs
 COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
-# Crucial para que el servidor de Next.js encuentre los tipos y el motor de Prisma
+# Crucial para el runtime
 COPY --from=builder --chown=nextjs:nodejs /app/node_modules/.prisma ./node_modules/.prisma
 
 USER nextjs
