@@ -9,6 +9,8 @@ services:
       POSTGRES_DB:       panariapos_db
     volumes:
       - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U panariapos"]
       interval: 10s
@@ -22,6 +24,8 @@ services:
     command: redis-server --requirepass ${REDIS_PASSWORD}
     volumes:
       - redisdata:/data
+    ports:
+      - "6380:6379"
 
   api:
     build:
@@ -30,22 +34,22 @@ services:
     container_name: panariapos_api
     restart: unless-stopped
     environment:
-      DATABASE_URL:         postgresql://panariapos:${DB_PASSWORD}@db:5432/panariapos_db
-      REDIS_HOST:           redis
-      REDIS_PORT:           6379
-      REDIS_PASSWORD:       ${REDIS_PASSWORD}
-      JWT_SECRET:           ${JWT_SECRET}
-      JWT_REFRESH_SECRET:   ${JWT_REFRESH_SECRET}
-      JWT_EXPIRES_IN:       15m
+      DATABASE_URL:           postgresql://panariapos:${DB_PASSWORD}@db:5432/panariapos_db
+      REDIS_HOST:             redis
+      REDIS_PORT:             6379
+      REDIS_PASSWORD:         ${REDIS_PASSWORD}
+      JWT_SECRET:             ${JWT_SECRET}
+      JWT_REFRESH_SECRET:     ${JWT_REFRESH_SECRET}
+      JWT_EXPIRES_IN:         15m
       JWT_REFRESH_EXPIRES_IN: 7d
-      PORT:                 3001
-      NODE_ENV:             production
-      FRONTEND_URL:         https://panariapos.com
+      PORT:                   3001
+      NODE_ENV:               production
+      FRONTEND_URL:           https://panariapos.com
     depends_on:
       db:
         condition: service_healthy
     ports:
-      - "3001:3001"
+      - "3101:3001"
 
   frontend:
     build:
@@ -58,7 +62,7 @@ services:
     depends_on:
       - api
     ports:
-      - "3000:3000"
+      - "3100:3000"
 
 volumes:
   pgdata:
