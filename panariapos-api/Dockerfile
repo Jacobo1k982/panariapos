@@ -48,4 +48,4 @@ USER nestjs
 EXPOSE 3001
 
 # Si tu archivo principal está en dist/src/main.js, cambia la ruta aquí:
-CMD ["node", "dist/main.js"]
+CMD ["node", "dist/src/main.js"]
