@@ -27,6 +27,41 @@ services:
     ports:
       - "6380:6379"
 
+  api:
+    build:
+      context: ./panariapos-api
+      dockerfile: Dockerfile
+    container_name: panariapos_api
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql://panariapos:panariapos123@db:5432/panariapos_db
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      JWT_SECRET: su-secreto-aqui # Cambia esto por algo seguro
+      PORT: 3001
+      NODE_ENV: production
+      # ESTA ES LA LÍNEA QUE FALTABA:
+      FRONTEND_URL: https://panariapos.jacana-dev.com
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "3101:3001"
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: panariapos_frontend
+    restart: unless-stopped
+    environment:
+      # Y ESTA OTRA LÍNEA TAMBIÉN:
+      NEXT_PUBLIC_API_URL: https://panariapos.jacana-dev.com/api/v1
+    depends_on:
+      - api
+    ports:
+      - "3100:3000"
+
 volumes:
   pgdata:
   redisdata:
