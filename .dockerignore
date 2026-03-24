@@ -1,0 +1,10 @@
+# .dockerignore
+node_modules
+.next
+out
+build
+dist
+.git
+
+# IMPORTANTÍSIMO: Ignorar la carpeta del API en el build del frontend
+panariapos-api

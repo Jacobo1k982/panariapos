@@ -30,14 +30,14 @@
   },
   "include": [
     "next-env.d.ts",
-    "src/**/*.ts", // 1. Prioriza tu carpeta src
+    "src/**/*.ts",
     "src/**/*.tsx",
-    ".next/types/**/*.ts",
-    "**/*.ts", // Mantener por compatibilidad, pero...
-    "**/*.tsx"
+    ".next/types/**/*.ts"
   ],
   "exclude": [
     "node_modules",
-    "panariapos-api" // 2. CLAVE: Ignorar la carpeta del backend
+    "panariapos-api",
+    "dist",
+    ".next"
   ]
 }
