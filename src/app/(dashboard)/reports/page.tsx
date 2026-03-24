@@ -276,8 +276,8 @@ export default function ReportsPage() {
                                         <Cell key={i} fill={entry.color} strokeWidth={0} />
                                     ))}
                                 </Pie>
-                                <Tooltip formatter={(v: number) => [`${v}%`, '']}
-                                    contentStyle={{ background: '#1e2333', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '8px', fontSize: '12px' }} />
+                                <Tooltip formatter={(v: number | string | undefined) => [`${v}${typeof v === 'number' ? '%' : ''}`, '']} ... />
+                                contentStyle={{ background: '#1e2333', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '8px', fontSize: '12px' }} />
                             </PieChart>
                         </ResponsiveContainer>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', width: '100%' }}>
