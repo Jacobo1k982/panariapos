@@ -1,0 +1,65 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: panariapos_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER:     panariapos
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB:       panariapos_db
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U panariapos"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: panariapos_redis
+    restart: unless-stopped
+    command: redis-server --requirepass ${REDIS_PASSWORD}
+    volumes:
+      - redisdata:/data
+
+  api:
+    build:
+      context: ./panariapos-api
+      dockerfile: Dockerfile
+    container_name: panariapos_api
+    restart: unless-stopped
+    environment:
+      DATABASE_URL:         postgresql://panariapos:${DB_PASSWORD}@db:5432/panariapos_db
+      REDIS_HOST:           redis
+      REDIS_PORT:           6379
+      REDIS_PASSWORD:       ${REDIS_PASSWORD}
+      JWT_SECRET:           ${JWT_SECRET}
+      JWT_REFRESH_SECRET:   ${JWT_REFRESH_SECRET}
+      JWT_EXPIRES_IN:       15m
+      JWT_REFRESH_EXPIRES_IN: 7d
+      PORT:                 3001
+      NODE_ENV:             production
+      FRONTEND_URL:         https://panariapos.com
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "3001:3001"
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: panariapos_frontend
+    restart: unless-stopped
+    environment:
+      NEXT_PUBLIC_API_URL: https://panariapos.com/api/v1
+    depends_on:
+      - api
+    ports:
+      - "3000:3000"
+
+volumes:
+  pgdata:
+  redisdata:

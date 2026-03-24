@@ -1,0 +1,425 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+model Tenant {
+    id          String    @id @default(uuid())
+    name        String
+    slug        String    @unique
+    plan        Plan      @default(BASIC)
+    active      Boolean   @default(true)
+    trialEndsAt DateTime?
+    phone       String?
+    address     String?
+    logoUrl     String?
+    receiptMsg  String?   @default("Gracias por su compra")
+    createdAt   DateTime  @default(now())
+    updatedAt   DateTime  @updatedAt
+    slogan      String?
+    timezone    String?   @default("America/Costa_Rica")
+
+    branches   Branch[]
+    users      User[]
+    products   Product[]
+    customers  Customer[]
+    suppliers  Supplier[]
+    recipes    Recipe[]
+    categories Category[]
+
+    @@map("tenants")
+}
+
+enum Plan {
+    BASIC
+    PRO
+    ENTERPRISE
+}
+
+model Branch {
+    id        String   @id @default(uuid())
+    tenantId  String
+    name      String
+    address   String?
+    phone     String?
+    active    Boolean  @default(true)
+    createdAt DateTime @default(now())
+
+    tenant           Tenant            @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+    users            User[]
+    sales            Sale[]
+    cashRegisters    CashRegister[]
+    inventoryItems   InventoryItem[]
+    productionOrders ProductionOrder[]
+
+    @@map("branches")
+}
+
+model User {
+    id           String    @id @default(uuid())
+    tenantId     String
+    branchId     String?
+    name         String
+    email        String
+    passwordHash String
+    role         Role      @default(CASHIER)
+    active       Boolean   @default(true)
+    lastLogin    DateTime?
+    createdAt    DateTime  @default(now())
+    updatedAt    DateTime  @updatedAt
+
+    tenant        Tenant         @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+    branch        Branch?        @relation(fields: [branchId], references: [id])
+    sales         Sale[]
+    cashRegisters CashRegister[]
+    refreshTokens RefreshToken[]
+    activityLogs  ActivityLog[]
+
+    @@unique([tenantId, email])
+    @@map("users")
+}
+
+enum Role {
+    SUPER_ADMIN
+    ADMIN
+    CASHIER
+    PRODUCTION
+}
+
+model RefreshToken {
+    id        String   @id @default(uuid())
+    userId    String
+    token     String   @unique
+    expiresAt DateTime
+    createdAt DateTime @default(now())
+
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@map("refresh_tokens")
+}
+
+model Category {
+    id       String  @id @default(uuid())
+    tenantId String
+    name     String
+    emoji    String? @default("📦")
+
+    tenant   Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+    products Product[]
+
+    @@map("categories")
+}
+
+model Product {
+    id          String   @id @default(uuid())
+    tenantId    String
+    categoryId  String?
+    sku         String
+    name        String
+    description String?
+    price       Decimal  @db.Decimal(10, 2)
+    unit        Unit     @default(UNIT)
+    isProduced  Boolean  @default(false)
+    active      Boolean  @default(true)
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+
+    tenant    Tenant     @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+    category  Category?  @relation(fields: [categoryId], references: [id])
+    saleLines SaleLine[]
+    recipe    Recipe?
+
+    @@unique([tenantId, sku])
+    @@map("products")
+}
+
+enum Unit {
+    UNIT
+    KG
+    G
+    L
+    ML
+    PACK
+}
+
+model InventoryItem {
+    id          String       @id @default(uuid())
+    branchId    String
+    name        String
+    sku         String
+    category    ItemCategory @default(RAW_MATERIAL)
+    unit        Unit         @default(KG)
+    quantity    Decimal      @db.Decimal(10, 3)
+    minStock    Decimal      @db.Decimal(10, 3)
+    costPerUnit Decimal      @db.Decimal(10, 2)
+    supplier    String?
+    expiryDate  DateTime?
+    updatedAt   DateTime     @updatedAt
+
+    branch               Branch                @relation(fields: [branchId], references: [id], onDelete: Cascade)
+    recipeIngredients    RecipeIngredient[]
+    inventoryAdjustments InventoryAdjustment[]
+
+    @@map("inventory_items")
+}
+
+enum ItemCategory {
+    RAW_MATERIAL
+    FINISHED_PRODUCT
+    SUPPLY
+}
+
+model InventoryAdjustment {
+    id        String   @id @default(uuid())
+    itemId    String
+    delta     Decimal  @db.Decimal(10, 3)
+    reason    String?
+    createdAt DateTime @default(now())
+
+    item InventoryItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
+    @@map("inventory_adjustments")
+}
+
+model Recipe {
+    id          String   @id @default(uuid())
+    tenantId    String
+    productId   String   @unique
+    yield       Decimal  @db.Decimal(10, 2)
+    yieldUnit   String   @default("unidades")
+    prepMinutes Int      @default(60)
+    notes       String?
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+
+    tenant           Tenant             @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+    product          Product            @relation(fields: [productId], references: [id], onDelete: Cascade)
+    ingredients      RecipeIngredient[]
+    productionOrders ProductionOrder[]
+
+    @@map("recipes")
+}
+
+model RecipeIngredient {
+    id       String  @id @default(uuid())
+    recipeId String
+    itemId   String
+    quantity Decimal @db.Decimal(10, 3)
+    unit     Unit
+
+    recipe Recipe        @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+    item   InventoryItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
+    @@map("recipe_ingredients")
+}
+
+model ProductionOrder {
+    id          String      @id @default(uuid())
+    branchId    String
+    recipeId    String
+    batches     Int         @default(1)
+    status      OrderStatus @default(PENDING)
+    scheduledAt DateTime?
+    completedAt DateTime?
+    producedQty Decimal     @default(0) @db.Decimal(10, 2)
+    notes       String?
+    createdAt   DateTime    @default(now())
+
+    branch Branch @relation(fields: [branchId], references: [id], onDelete: Cascade)
+    recipe Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+
+    @@map("production_orders")
+}
+
+enum OrderStatus {
+    PENDING
+    IN_PROGRESS
+    COMPLETED
+    CANCELLED
+}
+
+model Customer {
+    id            String         @id @default(uuid())
+    tenantId      String
+    name          String
+    phone         String
+    email         String?
+    status        CustomerStatus @default(ACTIVE)
+    loyaltyPoints Int            @default(0)
+    creditLimit   Decimal        @default(0) @db.Decimal(10, 2)
+    creditBalance Decimal        @default(0) @db.Decimal(10, 2)
+    notes         String?
+    createdAt     DateTime       @default(now())
+    updatedAt     DateTime       @updatedAt
+
+    tenant             Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+    sales              Sale[]
+    creditTransactions CreditTransaction[]
+
+    @@map("customers")
+}
+
+enum CustomerStatus {
+    ACTIVE
+    INACTIVE
+    BLOCKED
+}
+
+model CreditTransaction {
+    id         String     @id @default(uuid())
+    customerId String
+    type       CreditType
+    amount     Decimal    @db.Decimal(10, 2)
+    note       String?
+    createdAt  DateTime   @default(now())
+
+    customer Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+
+    @@map("credit_transactions")
+}
+
+enum CreditType {
+    CHARGE
+    PAYMENT
+}
+
+model Supplier {
+    id        String   @id @default(uuid())
+    tenantId  String
+    name      String
+    phone     String?
+    email     String?
+    notes     String?
+    createdAt DateTime @default(now())
+
+    tenant         Tenant          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+    purchaseOrders PurchaseOrder[]
+
+    @@map("suppliers")
+}
+
+model PurchaseOrder {
+    id         String         @id @default(uuid())
+    supplierId String
+    status     PurchaseStatus @default(PENDING)
+    total      Decimal        @default(0) @db.Decimal(10, 2)
+    notes      String?
+    createdAt  DateTime       @default(now())
+    updatedAt  DateTime       @updatedAt
+
+    supplier Supplier       @relation(fields: [supplierId], references: [id], onDelete: Cascade)
+    lines    PurchaseLine[]
+
+    @@map("purchase_orders")
+}
+
+model PurchaseLine {
+    id       String  @id @default(uuid())
+    orderId  String
+    itemName String
+    quantity Decimal @db.Decimal(10, 3)
+    unit     Unit
+    cost     Decimal @db.Decimal(10, 2)
+
+    order PurchaseOrder @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+    @@map("purchase_lines")
+}
+
+enum PurchaseStatus {
+    PENDING
+    RECEIVED
+    CANCELLED
+}
+
+model CashRegister {
+    id             String    @id @default(uuid())
+    branchId       String
+    userId         String
+    openedAt       DateTime  @default(now())
+    closedAt       DateTime?
+    openingAmount  Decimal   @db.Decimal(10, 2)
+    closingAmount  Decimal?  @db.Decimal(10, 2)
+    expectedAmount Decimal?  @db.Decimal(10, 2)
+    difference     Decimal?  @db.Decimal(10, 2)
+    notes          String?
+
+    branch Branch @relation(fields: [branchId], references: [id], onDelete: Cascade)
+    user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+    sales  Sale[]
+
+    @@map("cash_registers")
+}
+
+model Sale {
+    id             String        @id @default(uuid())
+    branchId       String
+    userId         String
+    customerId     String?
+    cashRegisterId String?
+    receiptNumber  String
+    subtotal       Decimal       @db.Decimal(10, 2)
+    discount       Decimal       @default(0) @db.Decimal(10, 2)
+    total          Decimal       @db.Decimal(10, 2)
+    paymentMethod  PaymentMethod
+    paymentRef     String?
+    status         SaleStatus    @default(COMPLETED)
+    notes          String?
+    createdAt      DateTime      @default(now())
+
+    branch       Branch        @relation(fields: [branchId], references: [id], onDelete: Cascade)
+    user         User          @relation(fields: [userId], references: [id])
+    customer     Customer?     @relation(fields: [customerId], references: [id])
+    cashRegister CashRegister? @relation(fields: [cashRegisterId], references: [id])
+    lines        SaleLine[]
+
+    @@map("sales")
+}
+
+model SaleLine {
+    id          String  @id @default(uuid())
+    saleId      String
+    productId   String
+    productName String
+    quantity    Decimal @db.Decimal(10, 3)
+    unitPrice   Decimal @db.Decimal(10, 2)
+    discount    Decimal @default(0) @db.Decimal(10, 2)
+    subtotal    Decimal @db.Decimal(10, 2)
+
+    sale    Sale    @relation(fields: [saleId], references: [id], onDelete: Cascade)
+    product Product @relation(fields: [productId], references: [id])
+
+    @@map("sale_lines")
+}
+
+enum PaymentMethod {
+    CASH
+    CARD
+    SINPE
+    TRANSFER
+    CREDIT
+}
+
+enum SaleStatus {
+    COMPLETED
+    REFUNDED
+    CANCELLED
+}
+
+model ActivityLog {
+    id        String   @id @default(uuid())
+    userId    String
+    action    String
+    entity    String?
+    entityId  String?
+    metadata  Json?
+    createdAt DateTime @default(now())
+
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@map("activity_logs")
+}
