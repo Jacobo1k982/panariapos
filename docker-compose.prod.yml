@@ -44,7 +44,7 @@ services:
       JWT_REFRESH_EXPIRES_IN: 7d
       PORT:                   3001
       NODE_ENV:               production
-      FRONTEND_URL:           https://panariapos.com
+      FRONTEND_URL:           https://panariapos.jacana-dev.com
     depends_on:
       db:
         condition: service_healthy
@@ -58,7 +58,7 @@ services:
     container_name: panariapos_frontend
     restart: unless-stopped
     environment:
-      NEXT_PUBLIC_API_URL: https://panariapos.com/api/v1
+      NEXT_PUBLIC_API_URL: https://panariapos.jacana-dev.com/api/v1
     depends_on:
       - api
     ports:
