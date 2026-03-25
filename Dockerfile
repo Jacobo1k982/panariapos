@@ -1,7 +1,6 @@
 FROM node:20-alpine AS deps
 WORKDIR /app
 COPY package*.json ./
-# Copiamos el esquema para que el install pueda generar tipos si es necesario
 COPY panariapos-api/prisma ./prisma/ 
 RUN npm install
 
@@ -10,18 +9,19 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY package*.json ./
 COPY tsconfig.json ./
-# --- CAMBIO AQUÍ: Usamos .ts ---
 COPY next.config.ts ./  
 COPY tailwind.config.ts ./
 COPY src ./src
 COPY public ./public
-# Volvemos a copiar el esquema a la ruta que espera el comando generate
 COPY panariapos-api/prisma ./panariapos-api/prisma 
 
-# Generamos prisma antes del build (Forzamos v6 para evitar P1012)
 RUN npx prisma@6 generate --schema=./panariapos-api/prisma/schema.prisma
 
 ENV NEXT_TELEMETRY_DISABLED=1
+
+ARG NEXT_PUBLIC_API_URL
+ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
+
 RUN npm run build
 
 FROM node:20-alpine AS runner
