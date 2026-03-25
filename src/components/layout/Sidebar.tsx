@@ -14,6 +14,7 @@ import CloseCashRegisterModal from '@/components/pos/CloseCashRegisterModal'
 
 const NAV = [
     { href: '/pos', icon: ShoppingCart, label: 'POS' },
+    { href: '/products', icon: Package, label: 'Productos' },
     { href: '/sales', icon: ShoppingBag, label: 'Ventas' },
     { href: '/inventory', icon: Package, label: 'Inventario' },
     { href: '/production', icon: ChefHat, label: 'Producción' },
