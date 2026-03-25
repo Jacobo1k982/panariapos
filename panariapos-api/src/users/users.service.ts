@@ -1,6 +1,7 @@
-import { Injectable, ConflictException, NotFoundException } from '@nestjs/common'
+import { Injectable, ConflictException, NotFoundException, ForbiddenException } from '@nestjs/common'
 import { PrismaService } from '../prisma/prisma.service'
 import { CreateUserDto, UpdateUserDto } from './dto/create-user.dto'
+import { getPlanLimits } from '../common/plan-limits'
 import * as bcrypt from 'bcryptjs'
 
 @Injectable()
@@ -8,21 +9,40 @@ export class UsersService {
   constructor(private prisma: PrismaService) {}
 
   async create(tenantId: string, dto: CreateUserDto) {
+    // Verificar límite de usuarios según plan
+    const tenant = await this.prisma.tenant.findUnique({
+      where: { id: tenantId },
+      select: { plan: true },
+    })
+    if (!tenant) throw new NotFoundException('Tenant no encontrado')
+
+    const limits  = getPlanLimits(tenant.plan)
+    const current = await this.prisma.user.count({
+      where: { tenantId, active: true },
+    })
+
+    if (current >= limits.maxUsers) {
+      throw new ForbiddenException(
+        `Tu plan ${tenant.plan} permite un máximo de ${limits.maxUsers} usuario${limits.maxUsers !== 1 ? 's' : ''}. ` +
+        `Actualizá tu plan para agregar más usuarios.`
+      )
+    }
+
     const exists = await this.prisma.user.findUnique({
       where: { tenantId_email: { tenantId, email: dto.email } },
     })
-    if (exists) throw new ConflictException('El correo ya esta registrado')
+    if (exists) throw new ConflictException('El correo ya está registrado')
 
     const passwordHash = await bcrypt.hash(dto.password, 12)
 
     return this.prisma.user.create({
       data: {
         tenantId,
-        name: dto.name,
-        email: dto.email,
+        name:       dto.name,
+        email:      dto.email,
         passwordHash,
-        role: dto.role,
-        branchId: dto.branchId,
+        role:       dto.role,
+        branchId:   dto.branchId,
       },
       select: {
         id: true, name: true, email: true, role: true,
@@ -73,6 +93,6 @@ export class UsersService {
     await this.findOne(tenantId, id)
     const passwordHash = await bcrypt.hash(newPassword, 12)
     await this.prisma.user.update({ where: { id }, data: { passwordHash } })
-    return { message: 'Contrasena actualizada' }
+    return { message: 'Contraseña actualizada' }
   }
 }
