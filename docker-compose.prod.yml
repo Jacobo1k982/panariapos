@@ -4,15 +4,15 @@ services:
     container_name: panariapos_db
     restart: unless-stopped
     environment:
-      POSTGRES_USER: panariapos
+      POSTGRES_USER:     panariapos
       POSTGRES_PASSWORD: ${DB_PASSWORD}
-      POSTGRES_DB: panariapos_db
+      POSTGRES_DB:       panariapos_db
     volumes:
       - pgdata:/var/lib/postgresql/data
     ports:
       - "5433:5432"
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U panariapos" ]
+      test: ["CMD-SHELL", "pg_isready -U panariapos"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -34,17 +34,17 @@ services:
     container_name: panariapos_api
     restart: unless-stopped
     environment:
-      DATABASE_URL: postgresql://panariapos:${DB_PASSWORD}@db:5432/panariapos_db
-      REDIS_HOST: redis
-      REDIS_PORT: 6379
-      REDIS_PASSWORD: ${REDIS_PASSWORD}
-      JWT_SECRET: ${JWT_SECRET}
-      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET}
-      JWT_EXPIRES_IN: 15m
+      DATABASE_URL:           postgresql://panariapos:${DB_PASSWORD}@db:5432/panariapos_db
+      REDIS_HOST:             redis
+      REDIS_PORT:             6379
+      REDIS_PASSWORD:         ${REDIS_PASSWORD}
+      JWT_SECRET:             ${JWT_SECRET}
+      JWT_REFRESH_SECRET:     ${JWT_REFRESH_SECRET}
+      JWT_EXPIRES_IN:         15m
       JWT_REFRESH_EXPIRES_IN: 7d
-      PORT: 3001
-      NODE_ENV: production
-      FRONTEND_URL: https://panariapos.jacana-dev.com
+      PORT:                   3001
+      NODE_ENV:               production
+      FRONTEND_URL:           https://panariapos.jacana-dev.com
     depends_on:
       db:
         condition: service_healthy
@@ -65,6 +65,15 @@ services:
       - api
     ports:
       - "3100:3000"
+
+  landing:
+    build:
+      context: .
+      dockerfile: Dockerfile.landing
+    container_name: panariapos_landing
+    restart: unless-stopped
+    ports:
+      - "3102:80"
 
 volumes:
   pgdata:

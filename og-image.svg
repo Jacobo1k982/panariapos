@@ -1,0 +1,73 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="630" fill="#0a0c10"/>
+  <ellipse cx="300" cy="200" rx="400" ry="300" fill="rgba(245,166,35,0.07)"/>
+  <ellipse cx="950" cy="480" rx="350" ry="250" fill="rgba(52,211,153,0.05)"/>
+  <g opacity="0.12" fill="#f5a623">
+    <circle cx="80" cy="80" r="1.5"/><circle cx="160" cy="80" r="1.5"/><circle cx="240" cy="80" r="1.5"/><circle cx="320" cy="80" r="1.5"/><circle cx="400" cy="80" r="1.5"/><circle cx="480" cy="80" r="1.5"/><circle cx="560" cy="80" r="1.5"/><circle cx="640" cy="80" r="1.5"/><circle cx="720" cy="80" r="1.5"/><circle cx="800" cy="80" r="1.5"/><circle cx="880" cy="80" r="1.5"/><circle cx="960" cy="80" r="1.5"/><circle cx="1040" cy="80" r="1.5"/><circle cx="1120" cy="80" r="1.5"/>
+    <circle cx="80" cy="160" r="1.5"/><circle cx="160" cy="160" r="1.5"/><circle cx="240" cy="160" r="1.5"/><circle cx="320" cy="160" r="1.5"/><circle cx="400" cy="160" r="1.5"/><circle cx="480" cy="160" r="1.5"/><circle cx="560" cy="160" r="1.5"/><circle cx="640" cy="160" r="1.5"/><circle cx="720" cy="160" r="1.5"/><circle cx="800" cy="160" r="1.5"/><circle cx="880" cy="160" r="1.5"/><circle cx="960" cy="160" r="1.5"/><circle cx="1040" cy="160" r="1.5"/><circle cx="1120" cy="160" r="1.5"/>
+    <circle cx="80" cy="540" r="1.5"/><circle cx="160" cy="540" r="1.5"/><circle cx="240" cy="540" r="1.5"/><circle cx="320" cy="540" r="1.5"/><circle cx="400" cy="540" r="1.5"/><circle cx="480" cy="540" r="1.5"/><circle cx="560" cy="540" r="1.5"/><circle cx="640" cy="540" r="1.5"/><circle cx="720" cy="540" r="1.5"/><circle cx="800" cy="540" r="1.5"/><circle cx="880" cy="540" r="1.5"/><circle cx="960" cy="540" r="1.5"/><circle cx="1040" cy="540" r="1.5"/><circle cx="1120" cy="540" r="1.5"/>
+  </g>
+  <rect x="80" y="220" width="64" height="64" rx="16" fill="#f5a623"/>
+  <polygon points="110,234 95,258 108,258 106,274 121,250 108,250" fill="#0a0c10"/>
+  <text x="160" y="258" font-family="'Sora',Georgia,sans-serif" font-size="40" font-weight="800" fill="#eef0f8" letter-spacing="-2">Panaria</text>
+  <text x="370" y="258" font-family="'Sora',Georgia,sans-serif" font-size="40" font-weight="800" fill="#f5a623" letter-spacing="-2">POS</text>
+  <rect x="160" y="270" width="200" height="28" rx="14" fill="rgba(245,166,35,0.12)" stroke="rgba(245,166,35,0.3)" stroke-width="1"/>
+  <circle cx="181" cy="284" r="4" fill="#f5a623"/>
+  <text x="193" y="289" font-family="'Sora',Georgia,sans-serif" font-size="13" font-weight="600" fill="#f5a623">Gratis para empezar</text>
+  <text x="80" y="380" font-family="'Sora',Georgia,sans-serif" font-size="68" font-weight="800" fill="#eef0f8" letter-spacing="-3">El POS que tu</text>
+  <text x="80" y="460" font-family="'Sora',Georgia,sans-serif" font-size="68" font-weight="800" fill="#f5a623" letter-spacing="-3">panadería merece</text>
+  <text x="80" y="515" font-family="'Sora',Georgia,sans-serif" font-size="22" font-weight="400" fill="#5a6278">Ventas · Inventario · Producción · Clientes · Reportes</text>
+  <line x1="80" y1="548" x2="560" y2="548" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+  <circle cx="96" cy="578" r="4" fill="#34d399"/>
+  <text x="108" y="583" font-family="'Sora',Georgia,sans-serif" font-size="16" font-weight="500" fill="#8b93a8">Sin tarjeta de crédito</text>
+  <circle cx="290" cy="578" r="4" fill="#34d399"/>
+  <text x="302" y="583" font-family="'Sora',Georgia,sans-serif" font-size="16" font-weight="500" fill="#8b93a8">15 días gratis</text>
+  <circle cx="430" cy="578" r="4" fill="#34d399"/>
+  <text x="442" y="583" font-family="'Sora',Georgia,sans-serif" font-size="16" font-weight="500" fill="#8b93a8">En español</text>
+  <rect x="700" y="100" width="440" height="430" rx="20" fill="#13161f" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+  <rect x="700" y="100" width="440" height="44" rx="20" fill="#191d2a"/>
+  <rect x="700" y="120" width="440" height="24" fill="#191d2a"/>
+  <circle cx="726" cy="122" r="6" fill="#f87171" opacity="0.7"/>
+  <circle cx="748" cy="122" r="6" fill="#fbbf24" opacity="0.7"/>
+  <circle cx="770" cy="122" r="6" fill="#34d399" opacity="0.7"/>
+  <rect x="700" y="144" width="52" height="386" fill="#0f1218"/>
+  <rect x="706" y="156" width="40" height="40" rx="9" fill="rgba(245,166,35,0.12)" stroke="rgba(245,166,35,0.25)" stroke-width="1"/>
+  <text x="726" y="181" font-family="sans-serif" font-size="16" text-anchor="middle" fill="#f5a623">⚡</text>
+  <rect x="706" y="204" width="40" height="40" rx="9" fill="rgba(255,255,255,0.03)"/>
+  <text x="726" y="229" font-family="sans-serif" font-size="16" text-anchor="middle" fill="#3e4558">🛒</text>
+  <rect x="706" y="252" width="40" height="40" rx="9" fill="rgba(255,255,255,0.03)"/>
+  <text x="726" y="277" font-family="sans-serif" font-size="16" text-anchor="middle" fill="#3e4558">📦</text>
+  <rect x="706" y="300" width="40" height="40" rx="9" fill="rgba(255,255,255,0.03)"/>
+  <text x="726" y="325" font-family="sans-serif" font-size="16" text-anchor="middle" fill="#3e4558">🧁</text>
+  <text x="768" y="172" font-family="'Sora',Georgia,sans-serif" font-size="13" font-weight="700" fill="#eef0f8">Punto de Venta</text>
+  <rect x="990" y="155" width="96" height="22" rx="11" fill="rgba(52,211,153,0.1)" stroke="rgba(52,211,153,0.25)" stroke-width="1"/>
+  <circle cx="1002" cy="166" r="3" fill="#34d399"/>
+  <text x="1010" y="171" font-family="'Sora',Georgia,sans-serif" font-size="11" font-weight="600" fill="#34d399">Caja abierta</text>
+  <rect x="762" y="186" width="120" height="72" rx="10" fill="#191d2a" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+  <text x="772" y="213" font-family="'Sora',Georgia,sans-serif" font-size="20" font-weight="800" fill="#f5a623" letter-spacing="-1">₡84,500</text>
+  <text x="772" y="230" font-family="'Sora',Georgia,sans-serif" font-size="10" font-weight="500" fill="#3e4558">Ventas hoy</text>
+  <text x="772" y="248" font-family="'Sora',Georgia,sans-serif" font-size="11" font-weight="600" fill="#34d399">+12% vs ayer</text>
+  <rect x="892" y="186" width="100" height="72" rx="10" fill="#191d2a" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+  <text x="902" y="213" font-family="'Sora',Georgia,sans-serif" font-size="20" font-weight="800" fill="#f5a623" letter-spacing="-1">47</text>
+  <text x="902" y="230" font-family="'Sora',Georgia,sans-serif" font-size="10" font-weight="500" fill="#3e4558">Ventas</text>
+  <text x="902" y="248" font-family="'Sora',Georgia,sans-serif" font-size="11" font-weight="600" fill="#34d399">+8 vs ayer</text>
+  <rect x="1002" y="186" width="110" height="72" rx="10" fill="#191d2a" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+  <text x="1012" y="213" font-family="'Sora',Georgia,sans-serif" font-size="20" font-weight="800" fill="#f5a623" letter-spacing="-1">₡1,797</text>
+  <text x="1012" y="230" font-family="'Sora',Georgia,sans-serif" font-size="10" font-weight="500" fill="#3e4558">Ticket prom.</text>
+  <text x="1012" y="248" font-family="'Sora',Georgia,sans-serif" font-size="11" font-weight="600" fill="#34d399">+5%</text>
+  <rect x="762" y="270" width="350" height="36" rx="8" fill="#191d2a" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+  <text x="774" y="293" font-family="'Sora',Georgia,sans-serif" font-size="12" font-weight="500" fill="#8b93a8">Pan de yema x12</text>
+  <text x="1062" y="293" font-family="'Sora',Georgia,sans-serif" font-size="12" font-weight="700" fill="#f5a623" text-anchor="end">₡3,600</text>
+  <rect x="762" y="312" width="350" height="36" rx="8" fill="#191d2a" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+  <text x="774" y="335" font-family="'Sora',Georgia,sans-serif" font-size="12" font-weight="500" fill="#8b93a8">Café americano x2</text>
+  <text x="1062" y="335" font-family="'Sora',Georgia,sans-serif" font-size="12" font-weight="700" fill="#f5a623" text-anchor="end">₡2,800</text>
+  <rect x="762" y="354" width="350" height="36" rx="8" fill="#191d2a" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+  <text x="774" y="377" font-family="'Sora',Georgia,sans-serif" font-size="12" font-weight="500" fill="#8b93a8">Bizcocho de limón x1</text>
+  <text x="1062" y="377" font-family="'Sora',Georgia,sans-serif" font-size="12" font-weight="700" fill="#f5a623" text-anchor="end">₡1,500</text>
+  <rect x="762" y="396" width="350" height="36" rx="8" fill="#191d2a" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+  <text x="774" y="419" font-family="'Sora',Georgia,sans-serif" font-size="12" font-weight="500" fill="#8b93a8">Empanada de chiverre x3</text>
+  <text x="1062" y="419" font-family="'Sora',Georgia,sans-serif" font-size="12" font-weight="700" fill="#f5a623" text-anchor="end">₡2,100</text>
+  <rect x="762" y="444" width="350" height="44" rx="10" fill="#f5a623"/>
+  <text x="937" y="471" font-family="'Sora',Georgia,sans-serif" font-size="15" font-weight="700" fill="#0a0c10" text-anchor="middle">Cobrar ₡10,000</text>
+  <text x="1120" y="606" font-family="'Sora',Georgia,sans-serif" font-size="14" font-weight="500" fill="#3e4558" text-anchor="end">landing.jacana-dev.com</text>
+</svg>

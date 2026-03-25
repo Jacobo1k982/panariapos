@@ -299,7 +299,7 @@ export default function PlansPage() {
       <p style={{ textAlign: 'center', marginTop: '32px', fontSize: '13px', color: 'var(--text-muted)' }}>
         ¿Tenés dudas? Escribinos a{' '}
         <a href="mailto:ventas@panariapos.com" style={{ color: 'var(--accent)', textDecoration: 'none', fontWeight: 600 }}>
-          ventas@panariapos.com
+          jgutierrez@jacana-dev.com
         </a>
       </p>
     </div>
