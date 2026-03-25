@@ -4,7 +4,7 @@ import { useAuthStore } from '@/store/auth.store'
 import { Check, Zap, Star, Building2 } from 'lucide-react'
 
 interface PlanPrice {
-  monthly:      number | null
+  monthly:      number
   yearly:       number
   yearlySaving: number
   label:        string
@@ -21,7 +21,7 @@ const PLANS: PlanPrice[] = [
     label:        'Básico',
     description:  'Perfecto para empezar',
     icon:         Zap,
-    monthly:      null,
+    monthly:      22,
     yearly:       212,
     yearlySaving: 44,
     features: [
@@ -79,7 +79,7 @@ const PLANS: PlanPrice[] = [
 
 export default function PlansPage() {
   const { user } = useAuthStore()
-  const [billing, setBilling] = useState<'monthly' | 'yearly'>('yearly')
+  const [billing, setBilling] = useState<'monthly' | 'yearly'>('monthly')
   const currentPlan = (user as any)?.plan ?? 'BASIC'
 
   return (
@@ -98,8 +98,7 @@ export default function PlansPage() {
         <div style={{
           display: 'inline-flex', alignItems: 'center',
           background: 'var(--bg-overlay)', borderRadius: '100px',
-          padding: '4px', border: '1px solid var(--border)',
-          gap: '2px',
+          padding: '4px', border: '1px solid var(--border)', gap: '2px',
         }}>
           {(['monthly', 'yearly'] as const).map(b => (
             <button
@@ -138,9 +137,9 @@ export default function PlansPage() {
         alignItems: 'start',
       }}>
         {PLANS.map(plan => {
-          const Icon      = plan.icon
-          const isCurrent = currentPlan === plan.planKey
-          const price     = billing === 'monthly' ? plan.monthly : plan.yearly
+          const Icon          = plan.icon
+          const isCurrent     = currentPlan === plan.planKey
+          const price         = billing === 'monthly' ? plan.monthly : plan.yearly
           const isHighlighted = plan.highlighted
 
           return (
@@ -152,8 +151,10 @@ export default function PlansPage() {
                 borderRadius: 'var(--radius-xl)',
                 padding:      '28px',
                 position:     'relative',
-                boxShadow:    isHighlighted ? '0 0 0 1px var(--accent-border), 0 20px 60px rgba(245,166,35,0.08)' : 'none',
-                transition:   'transform 0.2s, box-shadow 0.2s',
+                boxShadow:    isHighlighted
+                  ? '0 0 0 1px var(--accent-border), 0 20px 60px rgba(245,166,35,0.08)'
+                  : 'none',
+                transition: 'transform 0.2s, box-shadow 0.2s',
               }}
               onMouseEnter={e => {
                 if (!isHighlighted) {
@@ -212,36 +213,32 @@ export default function PlansPage() {
 
               {/* Precio */}
               <div style={{ marginBottom: '20px' }}>
-                {price === null ? (
-                  <div>
-                    <div style={{ fontSize: '40px', fontWeight: 800, letterSpacing: '-0.05em', lineHeight: 1 }}>
-                      Gratis
-                    </div>
-                    <div style={{ fontSize: '13px', color: 'var(--text-muted)', marginTop: '4px' }}>
-                      para siempre
-                    </div>
-                  </div>
-                ) : (
-                  <div>
-                    <div style={{ display: 'flex', alignItems: 'flex-start', gap: '2px' }}>
-                      <span style={{ fontSize: '18px', fontWeight: 700, color: 'var(--text-secondary)', marginTop: '6px' }}>$</span>
-                      <span style={{ fontSize: '44px', fontWeight: 800, letterSpacing: '-0.05em', lineHeight: 1 }}>
-                        {price}
-                      </span>
-                    </div>
-                    <div style={{ fontSize: '13px', color: 'var(--text-muted)', marginTop: '4px' }}>
-                      {billing === 'monthly' ? 'por mes' : 'por año'}
-                      {billing === 'yearly' && (
-                        <span style={{
-                          marginLeft: '8px', fontSize: '11px', fontWeight: 700,
-                          color: 'var(--success)',
-                        }}>
-                          Ahorrás ${plan.yearlySaving}
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                )}
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '2px' }}>
+                  <span style={{
+                    fontSize: '18px', fontWeight: 700, color: 'var(--text-secondary)',
+                    lineHeight: 1, marginTop: '8px',
+                  }}>
+                    $
+                  </span>
+                  <span style={{ fontSize: '44px', fontWeight: 800, letterSpacing: '-0.05em', lineHeight: 1 }}>
+                    {price}
+                  </span>
+                </div>
+                <div style={{ fontSize: '13px', color: 'var(--text-muted)', marginTop: '4px' }}>
+                  {billing === 'monthly' ? 'por mes' : 'por año'}
+                  {billing === 'yearly' && (
+                    <span style={{ marginLeft: '8px', fontSize: '11px', fontWeight: 700, color: 'var(--success)' }}>
+                      Ahorrás ${plan.yearlySaving}
+                    </span>
+                  )}
+                </div>
+                {/* Precio alternativo */}
+                <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '3px' }}>
+                  {billing === 'monthly'
+                    ? `o $${plan.yearly}/año · ahorrás $${plan.yearlySaving}`
+                    : `o $${plan.monthly}/mes`
+                  }
+                </div>
               </div>
 
               {/* Divider */}
@@ -274,11 +271,14 @@ export default function PlansPage() {
                   border: '1px solid var(--border)',
                   fontSize: '13px', fontWeight: 600, color: 'var(--text-muted)',
                 }}>
-                  Plan actual
+                  ✓ Plan actual
                 </div>
               ) : (
                 <button
-                  onClick={() => window.open('mailto:ventas@panariapos.com?subject=Upgrade a ' + plan.label, '_blank')}
+                  onClick={() => window.open(
+                    `mailto:ventas@panariapos.com?subject=Upgrade a ${plan.label}`,
+                    '_blank'
+                  )}
                   className={isHighlighted ? 'btn-accent' : 'btn-ghost'}
                   style={{
                     width: '100%', padding: '12px',
@@ -296,17 +296,12 @@ export default function PlansPage() {
       </div>
 
       {/* Nota */}
-      <p style={{
-        textAlign: 'center', marginTop: '32px',
-        fontSize: '13px', color: 'var(--text-muted)',
-      }}>
+      <p style={{ textAlign: 'center', marginTop: '32px', fontSize: '13px', color: 'var(--text-muted)' }}>
         ¿Tenés dudas? Escribinos a{' '}
         <a href="mailto:ventas@panariapos.com" style={{ color: 'var(--accent)', textDecoration: 'none', fontWeight: 600 }}>
           ventas@panariapos.com
         </a>
       </p>
-
-      <style>{`@keyframes fadeIn { from { opacity:0; transform:translateY(8px) } to { opacity:1; transform:translateY(0) } }`}</style>
     </div>
   )
 }
