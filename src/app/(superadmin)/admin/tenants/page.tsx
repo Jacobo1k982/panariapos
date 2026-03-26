@@ -6,7 +6,7 @@ import {
   Zap, Users, MapPin, ChevronRight,
   ToggleLeft, ToggleRight
 } from "lucide-react"
-import { useAdminTenants, useUpdatePlan, useToggleTenant } from "@/hooks/useAdmin"
+import { useAdminTenants, useUpdateTenantPlan, useToggleTenant } from "@/hooks/useAdmin"
 import toast from "react-hot-toast"
 
 const PLAN_CFG: Record<string, { label:string; color:string; bg:string; icon:any }> = {
@@ -24,7 +24,7 @@ export default function TenantsPage() {
   const [newPlan,   setNewPlan]   = useState("")
 
   const { data: tenants = [], isLoading } = useAdminTenants(filterActive, filterPlan || undefined)
-  const updatePlan   = useUpdatePlan()
+  const updatePlan   = useUpdateTenantPlan()
   const toggleTenant = useToggleTenant()
 
   const filtered = (tenants as any[]).filter(t =>

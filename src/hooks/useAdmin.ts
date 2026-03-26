@@ -9,10 +9,10 @@ export function useAdminMetrics() {
     })
 }
 
-export function useAdminTenants() {
+export function useAdminTenants(active?: boolean, plan?: string) {
     return useQuery({
-        queryKey: ['admin', 'tenants'],
-        queryFn:  () => api.get('/admin/tenants').then(r => r.data),
+        queryKey: ['admin', 'tenants', active, plan],
+        queryFn:  () => api.get('/admin/tenants', { params: { active, plan } }).then(r => r.data),
     })
 }
 
@@ -36,7 +36,7 @@ export function useUpdateTenantPlan() {
 export function useToggleTenant() {
     const qc = useQueryClient()
     return useMutation({
-        mutationFn: (id: string) =>
+        mutationFn: ({ id }: { id: string; active?: boolean }) =>
             api.patch(`/admin/tenants/${id}/toggle`).then(r => r.data),
         onSuccess: () => qc.invalidateQueries({ queryKey: ['admin'] }),
     })
