@@ -8,26 +8,27 @@ import {
     ShoppingCart, Package, ShoppingBag,
     BarChart3, MoreHorizontal, X,
     ChefHat, Users, Truck, Settings,
-    DollarSign, LogOut, Zap,
+    DollarSign, LogOut, Zap, FileText
 } from 'lucide-react'
 import CashRegisterModal from '@/components/pos/CashRegisterModal'
 import CloseCashRegisterModal from '@/components/pos/CloseCashRegisterModal'
 
 // Las 4 rutas principales en la bottom bar
 const MAIN_NAV = [
-    { href: '/pos',       icon: ShoppingCart, label: 'POS'      },
-    { href: '/products',  icon: Package,      label: 'Productos'},
-    { href: '/sales',     icon: ShoppingBag,  label: 'Ventas'   },
-    { href: '/reports',   icon: BarChart3,    label: 'Reportes' },
+    { href: '/pos', icon: ShoppingCart, label: 'POS' },
+    { href: '/products', icon: Package, label: 'Productos' },
+    { href: '/sales', icon: ShoppingBag, label: 'Ventas' },
+    { href: '/reports', icon: BarChart3, label: 'Reportes' },
 ]
 
 // El resto en el drawer "Más"
 const MORE_NAV = [
-    { href: '/inventory',  icon: Package,   label: 'Inventario' },
-    { href: '/production', icon: ChefHat,   label: 'Producción' },
-    { href: '/customers',  icon: Users,     label: 'Clientes'   },
-    { href: '/suppliers',  icon: Truck,     label: 'Proveedores'},
-    { href: '/settings',   icon: Settings,  label: 'Config'     },
+    { href: '/inventory', icon: Package, label: 'Inventario' },
+    { href: '/production', icon: ChefHat, label: 'Producción' },
+    { href: '/customers', icon: Users, label: 'Clientes' },
+    { href: '/suppliers', icon: Truck, label: 'Proveedores' },
+    { href: '/settings', icon: Settings, label: 'Config' },
+    { href: '/quotes', icon: FileText, label: 'Cotizaciones' }
 ]
 
 export default function MobileNav() {
@@ -35,8 +36,8 @@ export default function MobileNav() {
     const router = useRouter()
     const { user, logout } = useAuthStore()
     const { data: register } = useCurrentRegister()
-    const [showMore,  setShowMore]  = useState(false)
-    const [showOpen,  setShowOpen]  = useState(false)
+    const [showMore, setShowMore] = useState(false)
+    const [showOpen, setShowOpen] = useState(false)
     const [showClose, setShowClose] = useState(false)
     const isOpen = !!register
 

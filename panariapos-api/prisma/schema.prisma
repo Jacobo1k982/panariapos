@@ -31,6 +31,7 @@ model Tenant {
     suppliers  Supplier[]
     recipes    Recipe[]
     categories Category[]
+    quotes     Quote[]
 
     @@map("tenants")
 }
@@ -129,10 +130,11 @@ model Product {
     createdAt   DateTime @default(now())
     updatedAt   DateTime @updatedAt
 
-    tenant    Tenant     @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-    category  Category?  @relation(fields: [categoryId], references: [id])
-    saleLines SaleLine[]
-    recipe    Recipe?
+    tenant     Tenant      @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+    category   Category?   @relation(fields: [categoryId], references: [id])
+    saleLines  SaleLine[]
+    quoteLines QuoteLine[]
+    recipe     Recipe?
 
     @@unique([tenantId, sku])
     @@map("products")
@@ -259,6 +261,7 @@ model Customer {
 
     tenant             Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
     sales              Sale[]
+    quotes             Quote[]
     creditTransactions CreditTransaction[]
 
     @@map("customers")
@@ -409,6 +412,53 @@ enum SaleStatus {
     COMPLETED
     REFUNDED
     CANCELLED
+}
+
+model Quote {
+    id              String      @id @default(uuid())
+    tenantId        String
+    customerId      String?
+    quoteNumber     String
+    status          QuoteStatus @default(PENDING)
+    discount        Decimal     @default(0) @db.Decimal(10, 2)
+    subtotal        Decimal     @db.Decimal(10, 2)
+    total           Decimal     @db.Decimal(10, 2)
+    notes           String?
+    validUntil      DateTime?
+    convertedSaleId String?
+    createdById     String?
+    createdAt       DateTime    @default(now())
+    updatedAt       DateTime    @updatedAt
+
+    tenant   Tenant      @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+    customer Customer?   @relation(fields: [customerId], references: [id])
+    lines    QuoteLine[]
+
+    @@map("quotes")
+}
+
+enum QuoteStatus {
+    PENDING
+    ACCEPTED
+    REJECTED
+    EXPIRED
+    CONVERTED
+}
+
+model QuoteLine {
+    id          String  @id @default(uuid())
+    quoteId     String
+    productId   String
+    productName String
+    quantity    Decimal @db.Decimal(10, 3)
+    unitPrice   Decimal @db.Decimal(10, 2)
+    discount    Decimal @default(0) @db.Decimal(10, 2)
+    subtotal    Decimal @db.Decimal(10, 2)
+
+    quote   Quote   @relation(fields: [quoteId], references: [id], onDelete: Cascade)
+    product Product @relation(fields: [productId], references: [id])
+
+    @@map("quote_lines")
 }
 
 model ActivityLog {

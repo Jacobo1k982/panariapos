@@ -7,29 +7,30 @@ import { useCurrentRegister } from '@/hooks/useCash'
 import {
     ShoppingCart, Package, ChefHat, Users,
     Truck, BarChart3, Settings, Zap,
-    ShoppingBag, LogOut, DollarSign,
+    ShoppingBag, LogOut, DollarSign, FileText
 } from 'lucide-react'
 import CashRegisterModal from '@/components/pos/CashRegisterModal'
 import CloseCashRegisterModal from '@/components/pos/CloseCashRegisterModal'
 
 const NAV = [
-    { href: '/pos',        icon: ShoppingCart, label: 'POS'       },
-    { href: '/products',   icon: Package,      label: 'Productos' },
-    { href: '/sales',      icon: ShoppingBag,  label: 'Ventas'    },
-    { href: '/inventory',  icon: Package,      label: 'Inventario'},
-    { href: '/production', icon: ChefHat,      label: 'Producción'},
-    { href: '/customers',  icon: Users,        label: 'Clientes'  },
-    { href: '/suppliers',  icon: Truck,        label: 'Proveedores'},
-    { href: '/reports',    icon: BarChart3,    label: 'Reportes'  },
-    { href: '/settings',   icon: Settings,     label: 'Config'    },
+    { href: '/pos', icon: ShoppingCart, label: 'POS' },
+    { href: '/products', icon: Package, label: 'Productos' },
+    { href: '/sales', icon: ShoppingBag, label: 'Ventas' },
+    { href: '/inventory', icon: Package, label: 'Inventario' },
+    { href: '/production', icon: ChefHat, label: 'Producción' },
+    { href: '/customers', icon: Users, label: 'Clientes' },
+    { href: '/suppliers', icon: Truck, label: 'Proveedores' },
+    { href: '/reports', icon: BarChart3, label: 'Reportes' },
+    { href: '/settings', icon: Settings, label: 'Config' },
+    { href: '/quotes', icon: FileText, label: 'Cotizaciones' },
 ]
 
 export default function Sidebar() {
-    const path     = usePathname()
-    const router   = useRouter()
+    const path = usePathname()
+    const router = useRouter()
     const { user, logout } = useAuthStore()
     const { data: register } = useCurrentRegister()
-    const [showOpen,  setShowOpen]  = useState(false)
+    const [showOpen, setShowOpen] = useState(false)
     const [showClose, setShowClose] = useState(false)
 
     const handleLogout = async () => {
