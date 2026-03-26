@@ -155,7 +155,7 @@ export class AdminController {
             include: {
                 users:    { select: { id: true, name: true, email: true, role: true, lastLogin: true } },
                 branches: true,
-                _count:   { select: { users: true, branches: true, products: true, sales: true } },
+                _count:   { select: { users: true, branches: true, products: true } },
             },
         })
     }
