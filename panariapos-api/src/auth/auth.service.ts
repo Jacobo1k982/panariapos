@@ -20,6 +20,26 @@ export class AuthService {
         if (!user) throw new UnauthorizedException('Credenciales inválidas')
         if (!user.tenant.active) throw new ForbiddenException('Cuenta suspendida')
 
+        // ── Verificación de trial ────────────────────────────────────────────
+        const tenant = user.tenant
+        const isPaid  = tenant.plan !== 'BASIC' || !tenant.trialEndsAt
+
+        if (!isPaid && tenant.trialEndsAt) {
+            const now      = new Date()
+            const trialEnd = new Date(tenant.trialEndsAt)
+            const expired  = trialEnd < now
+
+            if (expired) {
+                // Calcular días vencidos para mensaje informativo
+                const daysExpired = Math.ceil((now.getTime() - trialEnd.getTime()) / (1000 * 60 * 60 * 24))
+                throw new ForbiddenException(
+                    `Tu período de prueba gratuita venció hace ${daysExpired} día${daysExpired !== 1 ? 's' : ''}. ` +
+                    `Activá un plan para continuar usando PanariaPOS.`
+                )
+            }
+        }
+        // ────────────────────────────────────────────────────────────────────
+
         const valid = await bcrypt.compare(password, user.passwordHash)
         if (!valid) throw new UnauthorizedException('Credenciales inválidas')
 
@@ -33,15 +53,15 @@ export class AuthService {
 
     async login(user: any) {
         const payload = {
-            sub: user.id,
+            sub:      user.id,
             tenantId: user.tenantId,
             branchId: user.branchId,
-            role: user.role,
+            role:     user.role,
         }
 
         const accessToken = this.jwt.sign(payload)
         const refreshToken = this.jwt.sign(payload, {
-            secret: this.config.get('JWT_REFRESH_SECRET'),
+            secret:    this.config.get('JWT_REFRESH_SECRET'),
             expiresIn: this.config.get('JWT_REFRESH_EXPIRES_IN', '7d'),
         })
 
@@ -52,20 +72,28 @@ export class AuthService {
             data: { userId: user.id, token: refreshToken, expiresAt },
         })
 
+        // Calcular días restantes del trial para enviarlo al frontend
+        const tenant     = user.tenant
+        const trialEndsAt = tenant.trialEndsAt ? new Date(tenant.trialEndsAt) : null
+        const daysLeft    = trialEndsAt
+            ? Math.max(0, Math.ceil((trialEndsAt.getTime() - Date.now()) / (1000 * 60 * 60 * 24)))
+            : null
+
         return {
             accessToken,
             refreshToken,
             user: {
-                id: user.id,
-                name: user.name,
-                email: user.email,
-                role: user.role,
-                tenantId: user.tenantId,
-                tenantName: user.tenant.name,
-                branchId: user.branchId,
-                branchName: user.branch?.name,
-                plan: user.tenant.plan,
-                trialEndsAt: user.tenant.trialEndsAt,
+                id:          user.id,
+                name:        user.name,
+                email:       user.email,
+                role:        user.role,
+                tenantId:    user.tenantId,
+                tenantName:  tenant.name,
+                branchId:    user.branchId,
+                branchName:  user.branch?.name,
+                plan:        tenant.plan,
+                trialEndsAt: tenant.trialEndsAt,
+                trialDaysLeft: daysLeft,
             },
         }
     }
@@ -84,10 +112,10 @@ export class AuthService {
             }
 
             const newAccess = this.jwt.sign({
-                sub: payload.sub,
+                sub:      payload.sub,
                 tenantId: payload.tenantId,
                 branchId: payload.branchId,
-                role: payload.role,
+                role:     payload.role,
             })
 
             return { accessToken: newAccess }
