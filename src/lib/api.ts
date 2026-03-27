@@ -6,7 +6,6 @@ const api: AxiosInstance = axios.create({
     baseURL: BASE_URL,
     timeout: 10000,
     headers: { 'Content-Type': 'application/json' },
-    withCredentials: false,
 })
 
 // ─── Request interceptor — adjunta access token ───────────────────────────────
@@ -23,7 +22,11 @@ let isRefreshing = false
 let failedQueue: { resolve: (v: string) => void; reject: (e: unknown) => void }[] = []
 
 function processQueue(error: unknown, token: string | null = null) {
-    failedQueue.forEach(p => error ? p.reject(error) : p.resolve(token!))
+    failedQueue.forEach(p => {
+        if (error) p.reject(error)
+        else if (token) p.resolve(token)
+        else p.reject(new Error('No token after refresh'))
+    })
     failedQueue = []
 }
 
@@ -61,7 +64,7 @@ api.interceptors.response.use(
             processQueue(err, null)
             localStorage.removeItem('access_token')
             localStorage.removeItem('refresh_token')
-            window.location.href = '/login'
+            if (typeof window !== 'undefined') window.location.href = '/login'
             return Promise.reject(err)
         } finally {
             isRefreshing = false
