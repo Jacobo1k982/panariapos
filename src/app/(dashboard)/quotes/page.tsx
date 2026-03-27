@@ -8,7 +8,7 @@ import {
 } from 'lucide-react'
 import { useQuotes, useUpdateQuote, Quote } from '@/hooks/useQuotes'
 import { useCurrentRegister } from '@/hooks/useCash'
-import { formatCRC } from '@/lib/utils'
+import { useCurrency } from '@/hooks/useCurrency'
 import QuoteModal from '@/components/quotes/QuoteModal'
 import QuoteDetailModal from '@/components/quotes/QuoteDetailModal'
 import toast from 'react-hot-toast'
@@ -22,6 +22,8 @@ const STATUS_CONFIG = {
 }
 
 export default function QuotesPage() {
+    const { format } = useCurrency()
+
     const [search,     setSearch]     = useState('')
     const [filterStatus, setFilterStatus] = useState('')
     const [showCreate, setShowCreate] = useState(false)
@@ -169,7 +171,7 @@ export default function QuotesPage() {
                                                 {q.customer?.name ?? <span style={{ color: 'var(--text-muted)' }}>Sin cliente</span>}
                                             </td>
                                             <td style={{ padding: '12px 16px', fontSize: '13px', fontWeight: 700, fontFamily: 'var(--font-mono)' }}>
-                                                {formatCRC(Number(q.total))}
+                                                {format(Number(q.total))}
                                             </td>
                                             <td style={{ padding: '12px 16px', fontSize: '12px', color: expired ? 'var(--danger)' : 'var(--text-muted)' }}>
                                                 {q.validUntil
@@ -274,7 +276,7 @@ export default function QuotesPage() {
                                     </div>
                                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                         <span style={{ fontSize: '15px', fontWeight: 700, fontFamily: 'var(--font-mono)', color: 'var(--accent)' }}>
-                                            {formatCRC(Number(q.total))}
+                                            {format(Number(q.total))}
                                         </span>
                                         {q.validUntil && (
                                             <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>

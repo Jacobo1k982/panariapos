@@ -7,7 +7,7 @@ import {
 import { useCreateQuote, QuoteLine } from '@/hooks/useQuotes'
 import { useProducts } from '@/hooks/useProducts'
 import { useCustomers } from '@/hooks/useCustomers'
-import { formatCRC } from '@/lib/utils'
+import { useCurrency } from '@/hooks/useCurrency'
 import toast from 'react-hot-toast'
 
 interface Props {
@@ -19,6 +19,7 @@ interface Props {
 }
 
 export default function QuoteModal({ onClose, onSaved, initialLines = [], initialCustomerId }: Props) {
+    const { format } = useCurrency()
     const [customerId,  setCustomerId]  = useState(initialCustomerId ?? '')
     const [discount,    setDiscount]    = useState(0)
     const [notes,       setNotes]       = useState('')
@@ -203,7 +204,7 @@ export default function QuoteModal({ onClose, onSaved, initialLines = [], initia
                                                 <div style={{ fontSize: '11px', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>{p.sku}</div>
                                             </div>
                                             <span style={{ fontWeight: 700, color: 'var(--accent)', fontFamily: 'var(--font-mono)' }}>
-                                                {formatCRC(Number(p.price))}
+                                                {format(Number(p.price))}
                                             </span>
                                         </div>
                                     ))}
@@ -269,7 +270,7 @@ export default function QuoteModal({ onClose, onSaved, initialLines = [], initia
                                         style={{ padding: '4px 6px', fontSize: '12px', textAlign: 'center' }}
                                     />
                                     <div style={{ fontSize: '13px', fontWeight: 700, textAlign: 'right', fontFamily: 'var(--font-mono)', color: 'var(--accent)' }}>
-                                        {formatCRC(line.subtotal ?? 0)}
+                                        {format(line.subtotal ?? 0)}
                                     </div>
                                     <button
                                         onClick={() => removeLine(line.productId)}
@@ -320,17 +321,17 @@ export default function QuoteModal({ onClose, onSaved, initialLines = [], initia
                         }}>
                             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', color: 'var(--text-secondary)' }}>
                                 <span>Subtotal</span>
-                                <span style={{ fontFamily: 'var(--font-mono)' }}>{formatCRC(subtotal)}</span>
+                                <span style={{ fontFamily: 'var(--font-mono)' }}>{format(subtotal)}</span>
                             </div>
                             {discount > 0 && (
                                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', color: 'var(--accent)' }}>
                                     <span>Descuento {discount}%</span>
-                                    <span style={{ fontFamily: 'var(--font-mono)' }}>-{formatCRC(subtotal * discount / 100)}</span>
+                                    <span style={{ fontFamily: 'var(--font-mono)' }}>-{format(subtotal * discount / 100)}</span>
                                 </div>
                             )}
                             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '16px', fontWeight: 700, borderTop: '1px solid var(--border)', paddingTop: '8px', marginTop: '4px' }}>
                                 <span>Total</span>
-                                <span style={{ fontFamily: 'var(--font-mono)', color: 'var(--accent)' }}>{formatCRC(total)}</span>
+                                <span style={{ fontFamily: 'var(--font-mono)', color: 'var(--accent)' }}>{format(total)}</span>
                             </div>
                         </div>
                     )}

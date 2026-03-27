@@ -101,6 +101,7 @@ export class AuthService {
                 branchId:      user.branchId,
                 branchName:    user.branch?.name,
                 plan:          tenant.plan,
+                currency:      tenant.currency ?? 'CRC',
                 trialEndsAt:   tenant.trialEndsAt,
                 trialDaysLeft: daysLeft,
             },

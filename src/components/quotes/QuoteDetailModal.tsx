@@ -7,7 +7,7 @@ import {
 } from 'lucide-react'
 import { Quote, useUpdateQuote, useConvertQuote } from '@/hooks/useQuotes'
 import { useCurrentRegister } from '@/hooks/useCash'
-import { formatCRC } from '@/lib/utils'
+import { useCurrency } from '@/hooks/useCurrency'
 import toast from 'react-hot-toast'
 
 const STATUS_CONFIG = {
@@ -25,6 +25,7 @@ interface Props {
 }
 
 export default function QuoteDetailModal({ quote, onClose, onUpdated }: Props) {
+    const { format } = useCurrency()
     const [paymentMethod, setPaymentMethod] = useState('CASH')
     const [converting,    setConverting]    = useState(false)
 
@@ -69,13 +70,13 @@ export default function QuoteDetailModal({ quote, onClose, onUpdated }: Props) {
         if (!customer?.phone) { toast.error('El cliente no tiene teléfono registrado'); return }
 
         const lines = quote.lines.map(l =>
-            `• ${l.productName} x${l.quantity} = ${formatCRC(Number(l.subtotal))}`
+            `• ${l.productName} x${l.quantity} = ${format(Number(l.subtotal))}`
         ).join('\n')
 
         const msg = encodeURIComponent(
             `Hola ${customer.name}, te enviamos la cotización *${quote.quoteNumber}*:\n\n` +
             `${lines}\n\n` +
-            `*Total: ${formatCRC(Number(quote.total))}*\n` +
+            `*Total: ${format(Number(quote.total))}*\n` +
             (quote.validUntil ? `Válida hasta: ${new Date(quote.validUntil).toLocaleDateString('es-CR')}\n` : '') +
             (quote.notes ? `\nNotas: ${quote.notes}` : '')
         )
@@ -156,12 +157,12 @@ export default function QuoteDetailModal({ quote, onClose, onUpdated }: Props) {
                                     <div style={{ flex: 1 }}>
                                         <div style={{ fontWeight: 500 }}>{l.productName}</div>
                                         <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
-                                            {l.quantity} × {formatCRC(Number(l.unitPrice))}
+                                            {l.quantity} × {format(Number(l.unitPrice))}
                                             {(l.discount ?? 0) > 0 && <span style={{ color: 'var(--accent)', marginLeft: 6 }}>-{l.discount}%</span>}
                                         </div>
                                     </div>
                                     <span style={{ fontFamily: 'var(--font-mono)', fontWeight: 700, color: 'var(--accent)' }}>
-                                        {formatCRC(Number(l.subtotal))}
+                                        {format(Number(l.subtotal))}
                                     </span>
                                 </div>
                             ))}
@@ -172,17 +173,17 @@ export default function QuoteDetailModal({ quote, onClose, onUpdated }: Props) {
                     <div style={{ background: 'var(--bg-overlay)', borderRadius: 'var(--radius-md)', padding: '12px 16px', marginBottom: '16px' }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '6px' }}>
                             <span>Subtotal</span>
-                            <span style={{ fontFamily: 'var(--font-mono)' }}>{formatCRC(Number(quote.subtotal))}</span>
+                            <span style={{ fontFamily: 'var(--font-mono)' }}>{format(Number(quote.subtotal))}</span>
                         </div>
                         {Number(quote.discount) > 0 && (
                             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', color: 'var(--accent)', marginBottom: '6px' }}>
                                 <span>Descuento {quote.discount}%</span>
-                                <span style={{ fontFamily: 'var(--font-mono)' }}>-{formatCRC(Number(quote.subtotal) * Number(quote.discount) / 100)}</span>
+                                <span style={{ fontFamily: 'var(--font-mono)' }}>-{format(Number(quote.subtotal) * Number(quote.discount) / 100)}</span>
                             </div>
                         )}
                         <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '18px', fontWeight: 800, borderTop: '1px solid var(--border)', paddingTop: '8px', marginTop: '4px' }}>
                             <span>Total</span>
-                            <span style={{ fontFamily: 'var(--font-mono)', color: 'var(--accent)' }}>{formatCRC(Number(quote.total))}</span>
+                            <span style={{ fontFamily: 'var(--font-mono)', color: 'var(--accent)' }}>{format(Number(quote.total))}</span>
                         </div>
                     </div>
 

@@ -1,7 +1,7 @@
 "use client"
 import { useState } from 'react'
 import { useAdminMetrics, useAdminTenants, useAdminActivity } from "@/hooks/useAdmin"
-import { formatCRC } from "@/lib/utils"
+import { useCurrency } from '@/hooks/useCurrency'
 import {
     Building2, ShoppingBag, CheckCircle, XCircle,
     Crown, Star, Zap, LogIn, UserPlus,
@@ -17,6 +17,7 @@ const PLAN_CFG: Record<string, { label: string; color: string; bg: string; icon:
 type AdminTab = 'overview' | 'activity'
 
 export default function AdminDashboard() {
+    const { format } = useCurrency()
     const [tab, setTab] = useState<AdminTab>('overview')
     const { data: metrics, isLoading: loadingM, refetch: refetchM } = useAdminMetrics()
     const { data: tenants = [], isLoading: loadingT }               = useAdminTenants()
@@ -69,7 +70,7 @@ export default function AdminDashboard() {
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '12px' }}>
                         {[
                             { label: 'Total negocios',   value: loadingM ? '…' : metrics?.totalTenants ?? 0,                       sub: `${metrics?.activeTenants ?? 0} activos`,            color: 'var(--info)',    icon: <Building2 size={16} />   },
-                            { label: 'Ventas este mes',  value: loadingM ? '…' : formatCRC(metrics?.totalSalesThisMonth ?? 0),     sub: `${metrics?.totalOrdersThisMonth ?? 0} órdenes`,     color: 'var(--accent)',  icon: <ShoppingBag size={16} />, mono: true },
+                            { label: 'Ventas este mes',  value: loadingM ? '…' : format(metrics?.totalSalesThisMonth ?? 0),     sub: `${metrics?.totalOrdersThisMonth ?? 0} órdenes`,     color: 'var(--accent)',  icon: <ShoppingBag size={16} />, mono: true },
                             { label: 'Negocios activos', value: loadingM ? '…' : metrics?.activeTenants ?? 0,                      sub: `de ${metrics?.totalTenants ?? 0} registrados`,      color: 'var(--success)', icon: <CheckCircle size={16} /> },
                             { label: 'Suspendidos',      value: loadingM ? '…' : (metrics?.totalTenants ?? 0) - (metrics?.activeTenants ?? 0), sub: 'Requieren atención', color: 'var(--danger)', icon: <XCircle size={16} /> },
                         ].map(k => (

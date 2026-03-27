@@ -7,7 +7,8 @@ import {
 import { PDFDownloadLink, pdf } from '@react-pdf/renderer'
 import ReceiptPDF from './ReceiptPDF'
 import { useTenant } from '@/hooks/useTenant'
-import { formatCRC } from '@/lib/utils'
+import { useCurrency } from '@/hooks/useCurrency'
+import { format } from 'util'
 
 // ─── Tipos ────────────────────────────────────────────────────────────────────
 type Method = 'cash' | 'card' | 'sinpe' | 'transfer'
@@ -30,6 +31,7 @@ interface PaymentModalProps {
 export default function PaymentModal({
     total, onClose, onConfirm, isLoading = false
 }: PaymentModalProps) {
+    const { format } = useCurrency()
     const [method, setMethod] = useState<Method>('cash')
     const [received, setReceived] = useState('')
     const [sinpeRef, setSinpeRef] = useState('')
@@ -91,7 +93,7 @@ export default function PaymentModal({
                                     fontSize: '26px', fontWeight: 700, letterSpacing: '-0.5px',
                                     fontFamily: 'var(--font-mono)', color: 'var(--accent)', marginTop: '2px',
                                 }}>
-                                    {formatCRC(total)}
+                                    {format(total)}
                                 </div>
                             </div>
                             <button
@@ -180,7 +182,7 @@ export default function PaymentModal({
                                                 fontWeight: 700, fontFamily: 'var(--font-mono)',
                                                 color: change >= 0 ? 'var(--success)' : 'var(--danger)',
                                             }}>
-                                                {formatCRC(Math.abs(change))}
+                                                {format(Math.abs(change))}
                                             </span>
                                         </div>
                                     )}
@@ -201,7 +203,7 @@ export default function PaymentModal({
                                                     color: received === String(v) ? 'var(--accent)' : undefined,
                                                 }}
                                             >
-                                                {formatCRC(v)}
+                                                {format(v)}
                                             </button>
                                         ))}
                                     </div>
@@ -279,7 +281,7 @@ export default function PaymentModal({
                                     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                                         <span style={{ color: 'var(--text-muted)' }}>Monto</span>
                                         <span style={{ fontFamily: 'var(--font-mono)', fontWeight: 700, color: 'var(--accent)' }}>
-                                            {formatCRC(total)}
+                                            {format(total)}
                                         </span>
                                     </div>
                                 </div>
@@ -303,7 +305,7 @@ export default function PaymentModal({
                                         Procesando...
                                     </>
                                 ) : (
-                                    `Confirmar pago · ${formatCRC(total)}`
+                                    `Confirmar pago · ${format(total)}`
                                 )}
                             </button>
 
@@ -314,7 +316,7 @@ export default function PaymentModal({
                             }}>
                                 {method === 'cash'
                                     ? receivedNum >= total && change > 0
-                                        ? `Dar cambio de ${formatCRC(change)}`
+                                        ? `Dar cambio de ${format(change)}`
                                         : 'Ingresá el monto recibido'
                                     : 'Esta acción registrará la venta en el sistema'
                                 }
@@ -399,7 +401,7 @@ function SuccessState({ sale, method, change, sinpeRef, onClose }: {
                         fontSize: '24px', fontWeight: 700,
                         fontFamily: 'var(--font-mono)', color: 'var(--success)',
                     }}>
-                        {formatCRC(change)}
+                        {format(change)}
                     </span>
                 </div>
             )}

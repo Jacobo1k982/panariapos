@@ -8,7 +8,8 @@ import {
     LineChart, Line, BarChart, Bar, PieChart, Pie, Cell,
     XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
 } from 'recharts'
-import { formatCRC } from '@/lib/utils'
+import { useCurrency } from '@/hooks/useCurrency'
+import { format } from 'util'
 
 type Range = '7d' | '30d' | '90d' | 'month'
 
@@ -82,7 +83,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
                     <span>{p.name}</span>
                     <span style={{ fontFamily: 'var(--font-mono)' }}>
                         {p.name?.toLowerCase().includes('venta') || p.name?.toLowerCase().includes('ingreso') || p.name?.toLowerCase().includes('costo')
-                            ? formatCRC(p.value) : p.value}
+                            ? format(p.value) : p.value}
                     </span>
                 </div>
             ))}
@@ -91,6 +92,9 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 }
 
 export default function ReportsPage() {
+
+    const { format } = useCurrency()
+
     const [range, setRange] = useState<Range>('7d')
 
     const data = DAILY_SALES
@@ -142,10 +146,10 @@ export default function ReportsPage() {
             {/* KPI cards — 2 cols en móvil, 4 en desktop */}
             <div className="grid-kpi">
                 {[
-                    { label: 'Ingresos totales', value: formatCRC(totals.revenue),   sub: '+12.4%', up: true,  icon: <DollarSign size={15} />, color: C.accent, mono: true  },
+                    { label: 'Ingresos totales', value: format(totals.revenue),   sub: '+12.4%', up: true,  icon: <DollarSign size={15} />, color: C.accent, mono: true  },
                     { label: 'Órdenes',          value: String(totals.orders),        sub: '+8.1%',  up: true,  icon: <ShoppingBag size={15} />, color: C.blue              },
                     { label: 'Clientes únicos',  value: String(totals.customers),     sub: '+5.3%',  up: true,  icon: <Users size={15} />, color: C.green                  },
-                    { label: 'Ticket promedio',  value: formatCRC(totals.avgTicket),  sub: '-2.1%',  up: false, icon: <Package size={15} />, color: C.purple, mono: true   },
+                    { label: 'Ticket promedio',  value: format(totals.avgTicket),  sub: '-2.1%',  up: false, icon: <Package size={15} />, color: C.purple, mono: true   },
                 ].map(k => <KPICard key={k.label} {...k} />)}
             </div>
 
@@ -196,7 +200,7 @@ export default function ReportsPage() {
                                             <div style={{ height: '100%', borderRadius: 2, width: `${barW}%`, background: i === 0 ? C.accent : i === 1 ? C.blue : C.green, opacity: 1 - i * 0.1 }} />
                                         </div>
                                     </div>
-                                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text-secondary)', textAlign: 'right' }}>{formatCRC(p.revenue)}</span>
+                                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text-secondary)', textAlign: 'right' }}>{format(p.revenue)}</span>
                                     <span style={{ fontSize: '11px', fontWeight: 700, textAlign: 'right', color: margin > 50 ? C.green : margin > 30 ? C.accent : C.danger }}>{margin}%</span>
                                 </div>
                             )
@@ -254,7 +258,7 @@ export default function ReportsPage() {
                                     <div style={{ height: '100%', borderRadius: 3, width: `${barW}%`, background: pm.color, opacity: 0.8 }} />
                                 </div>
                                 <span style={{ fontSize: '11px', color: 'var(--text-muted)', textAlign: 'center' }}>{pm.count}</span>
-                                <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', fontWeight: 600, textAlign: 'right' }}>{formatCRC(pm.total)}</span>
+                                <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', fontWeight: 600, textAlign: 'right' }}>{format(pm.total)}</span>
                             </div>
                         )
                     })}
@@ -263,9 +267,9 @@ export default function ReportsPage() {
 
             {/* Resumen — 1 col en móvil, 3 en desktop */}
             <div className="grid-summary">
-                <SummaryCard title="Mejor día" value="Sábado"         sub={`Promedio ${formatCRC(89400)} en ventas`} icon="📅" />
+                <SummaryCard title="Mejor día" value="Sábado"         sub={`Promedio ${format(89400)} en ventas`} icon="📅" />
                 <SummaryCard title="Hora pico"  value="8:00 – 9:00am" sub="45 órdenes promedio en ese rango"         icon="⏰" />
-                <SummaryCard title="Producto estrella" value={TOP_PRODUCTS[0].name} sub={`${TOP_PRODUCTS[0].sold} uds · ${formatCRC(TOP_PRODUCTS[0].revenue)}`} icon="⭐" />
+                <SummaryCard title="Producto estrella" value={TOP_PRODUCTS[0].name} sub={`${TOP_PRODUCTS[0].sold} uds · ${format(TOP_PRODUCTS[0].revenue)}`} icon="⭐" />
             </div>
 
             <style>{`

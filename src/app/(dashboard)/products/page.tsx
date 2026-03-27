@@ -4,7 +4,7 @@ import {
     Package, Plus, Search, Tag, Pencil,
     Trash2, X, ChevronDown, AlertCircle, Loader2
 } from 'lucide-react'
-import api from '@/lib/api'
+import { useCurrency } from '@/hooks/useCurrency'
 
 // ── Types ────────────────────────────────────────────────────────────────────
 type Unit = 'UNIT' | 'KG' | 'G' | 'L' | 'ML' | 'DOZEN'
@@ -46,6 +46,8 @@ const EMPTY_PRODUCT = {
 
 // ── Main Page ─────────────────────────────────────────────────────────────────
 export default function ProductsPage() {
+    const { format } = useCurrency()
+
     const [products, setProducts] = useState<Product[]>([])
     const [categories, setCategories] = useState<Category[]>([])
     const [loading, setLoading] = useState(true)

@@ -23,6 +23,7 @@ model Tenant {
     updatedAt   DateTime  @updatedAt
     slogan      String?
     timezone    String?   @default("America/Costa_Rica")
+    currency    String    @default("CRC")
 
     branches   Branch[]
     users      User[]

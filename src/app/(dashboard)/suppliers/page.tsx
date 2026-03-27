@@ -9,8 +9,9 @@ import {
     useSuppliers, useSupplierOrders, usePayablesSummary,
     useCreateSupplier, useCreatePurchaseOrder, useReceiveOrder
 } from '@/hooks/useSuppliers'
-import { formatCRC } from '@/lib/utils'
+import { useCurrency } from '@/hooks/useCurrency'
 import toast from 'react-hot-toast'
+import { format } from 'util'
 
 // ─── Tipos ────────────────────────────────────────────────────────────────────
 interface SupplierForm {
@@ -37,6 +38,7 @@ const STATUS_CFG: Record<string, { label: string; color: string; bg: string; ico
 
 // ─── Componente principal ─────────────────────────────────────────────────────
 export default function SuppliersPage() {
+    const { format } = useCurrency()
     const [search, setSearch] = useState('')
     const [selected, setSelected] = useState<any>(null)
     const [showSupForm, setShowSupForm] = useState(false)
@@ -71,7 +73,7 @@ export default function SuppliersPage() {
                     { label: 'Proveedores', value: suppliers.length, color: 'var(--info)', icon: <Truck size={14} /> },
                     { label: 'Órdenes activas', value: pending.length, color: 'var(--accent)', icon: <Clock size={14} /> },
                     { label: 'Recibidas', value: received.length, color: 'var(--success)', icon: <CheckCircle size={14} /> },
-                    { label: 'CxP pendiente', value: formatCRC(payables?.totalPayable ?? 0), color: 'var(--warning)', icon: <CreditCard size={14} />, mono: true },
+                    { label: 'CxP pendiente', value: format(payables?.totalPayable ?? 0), color: 'var(--warning)', icon: <CreditCard size={14} />, mono: true },
                 ].map(s => (
                     <div key={s.label} style={{
                         background: 'var(--bg-surface)', border: '1px solid var(--border)',
@@ -250,7 +252,7 @@ export default function SuppliersPage() {
                                             color: cfg.color, background: cfg.bg,
                                         }}>{cfg.label}</span>
                                         <span style={{ fontFamily: 'var(--font-mono)', fontWeight: 700, fontSize: '13px', color: 'var(--accent)' }}>
-                                            {formatCRC(Number(o.total))}
+                                            {format(Number(o.total))}
                                         </span>
                                     </div>
                                 )
@@ -319,7 +321,7 @@ export default function SuppliersPage() {
 
                                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                                     <span style={{ fontFamily: 'var(--font-mono)', fontWeight: 700, fontSize: '16px', color: 'var(--accent)' }}>
-                                        {formatCRC(Number(order.total))}
+                                        {format(Number(order.total))}
                                     </span>
                                     {order.status === 'PENDING' && (
                                         <button
@@ -592,7 +594,7 @@ function OrderModal({ suppliers, defaultSupplierId, onClose, onSave, isLoading }
                     }}>
                         <span style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>Total estimado</span>
                         <span style={{ fontFamily: 'var(--font-mono)', fontWeight: 700, fontSize: '18px', color: 'var(--accent)' }}>
-                            {formatCRC(total)}
+                            {format(total)}
                         </span>
                     </div>
 

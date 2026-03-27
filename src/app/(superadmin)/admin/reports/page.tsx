@@ -1,9 +1,10 @@
 'use client'
 import { useAdminMetrics, useAdminTenants } from '@/hooks/useAdmin'
-import { formatCRC } from '@/lib/utils'
+import { useCurrency } from '@/hooks/useCurrency'
 import { TrendingUp, Building2, ShoppingBag, Users } from 'lucide-react'
 
 export default function AdminReportsPage() {
+    const { format } = useCurrency()
     const { data: metrics } = useAdminMetrics()
     const { data: tenants = [] } = useAdminTenants()
 
@@ -27,7 +28,7 @@ export default function AdminReportsPage() {
                 {[
                     {
                         label: 'Ingresos este mes',
-                        value: formatCRC(metrics?.totalSalesThisMonth ?? 0),
+                        value: format(metrics?.totalSalesThisMonth ?? 0),
                         sub: `${metrics?.totalOrdersThisMonth ?? 0} órdenes`,
                         color: 'var(--accent)', icon: <TrendingUp size={18} />, mono: true,
                     },

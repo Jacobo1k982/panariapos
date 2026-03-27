@@ -2,10 +2,11 @@
 import { useState } from 'react'
 import { X, DollarSign, CheckCircle } from 'lucide-react'
 import { useOpenRegister } from '@/hooks/useCash'
-import { formatCRC } from '@/lib/utils'
+import { useCurrency } from '@/hooks/useCurrency'
 import toast from 'react-hot-toast'
 
 export default function CashRegisterModal({ onClose }: { onClose: () => void }) {
+    const { format } = useCurrency()
     const [amount, setAmount] = useState('')
     const [done, setDone] = useState(false)
     const openRegister = useOpenRegister()
@@ -33,7 +34,7 @@ export default function CashRegisterModal({ onClose }: { onClose: () => void }) 
                             <CheckCircle size={28} color="var(--success)" />
                         </div>
                         <div style={{ fontWeight: 600, fontSize: '16px' }}>¡Caja abierta!</div>
-                        <div style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>Monto inicial: {formatCRC(parseFloat(amount) || 0)}</div>
+                        <div style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>Monto inicial: {format(parseFloat(amount) || 0)}</div>
                     </div>
                 ) : (
                     <>
@@ -63,7 +64,7 @@ export default function CashRegisterModal({ onClose }: { onClose: () => void }) 
                             {[0, 5000, 10000, 20000, 50000].map(v => (
                                 <button key={v} onClick={() => setAmount(String(v))} className="btn-ghost"
                                     style={{ padding: '5px 10px', fontSize: '11px', fontFamily: 'var(--font-mono)' }}>
-                                    {v === 0 ? 'Sin fondo' : formatCRC(v)}
+                                    {v === 0 ? 'Sin fondo' : format(v)}
                                 </button>
                             ))}
                         </div>

@@ -5,7 +5,8 @@ import {
     Clock, AlertTriangle, BookOpen, Layers, Edit2,
     Trash2, ChevronDown, ChevronUp, Package
 } from 'lucide-react'
-import { formatCRC } from '@/lib/utils'
+import { useCurrency } from '@/hooks/useCurrency'
+import { format } from 'util'
 
 // ─── Tipos ────────────────────────────────────────────────────────────────────
 type OrderStatus = 'pending' | 'in_progress' | 'completed' | 'cancelled'
@@ -115,6 +116,8 @@ const STATUS_CONFIG: Record<OrderStatus, { label: string; color: string; bg: str
 
 // ─── Componente principal ─────────────────────────────────────────────────────
 export default function ProductionPage() {
+    const { format } = useCurrency()
+
     const [tab, setTab] = useState<'orders' | 'recipes'>('orders')
     const [recipes, setRecipes] = useState<Recipe[]>(DEMO_RECIPES)
     const [orders, setOrders] = useState<ProductionOrder[]>(DEMO_ORDERS)
@@ -395,7 +398,7 @@ function RecipesPanel({
                                 <div style={{ textAlign: 'right' }}>
                                     <div style={{ fontSize: '11px', color: 'var(--text-muted)', marginBottom: '2px' }}>Costo/unidad</div>
                                     <div style={{ fontFamily: 'var(--font-mono)', fontWeight: 700, color: 'var(--accent)', fontSize: '15px' }}>
-                                        {formatCRC(Math.round(perUnit))}
+                                        {format(Math.round(perUnit))}
                                     </div>
                                 </div>
                                 <div style={{ display: 'flex', gap: '4px' }}>
@@ -446,7 +449,7 @@ function RecipesPanel({
                                                 {ing.quantity} {ing.unit}
                                             </span>
                                             <span style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', color: 'var(--text-muted)' }}>
-                                                {formatCRC(Math.round(ing.quantity * ing.costUnit))}
+                                                {format(Math.round(ing.quantity * ing.costUnit))}
                                             </span>
                                         </div>
                                     ))}
@@ -459,8 +462,8 @@ function RecipesPanel({
                                     background: 'var(--bg-overlay)', border: '1px solid var(--border)',
                                 }}>
                                     {[
-                                        { label: 'Costo total lote', value: formatCRC(Math.round(total)) },
-                                        { label: 'Costo por unidad', value: formatCRC(Math.round(perUnit)) },
+                                        { label: 'Costo total lote', value: format(Math.round(total)) },
+                                        { label: 'Costo por unidad', value: format(Math.round(perUnit)) },
                                         { label: 'Tiempo preparación', value: `${recipe.prepMinutes} min` },
                                     ].map(s => (
                                         <div key={s.label} style={{ textAlign: 'center' }}>
@@ -561,13 +564,13 @@ function NewOrderModal({
                             <div>
                                 <div style={{ fontSize: '10px', color: 'var(--text-muted)', marginBottom: '3px' }}>Costo total</div>
                                 <div style={{ fontWeight: 700, fontFamily: 'var(--font-mono)', color: 'var(--accent)' }}>
-                                    {formatCRC(Math.round(totalCost))}
+                                    {format(Math.round(totalCost))}
                                 </div>
                             </div>
                             <div>
                                 <div style={{ fontSize: '10px', color: 'var(--text-muted)', marginBottom: '3px' }}>Costo/unidad</div>
                                 <div style={{ fontWeight: 700, fontFamily: 'var(--font-mono)', color: 'var(--accent)' }}>
-                                    {formatCRC(Math.round(totalCost / totalQty))}
+                                    {format(Math.round(totalCost / totalQty))}
                                 </div>
                             </div>
                         </div>

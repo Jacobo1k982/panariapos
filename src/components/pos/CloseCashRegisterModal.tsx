@@ -11,7 +11,7 @@ import {
     useRegisterSummary,
     useCloseRegister
 } from '@/hooks/useCash'
-import { formatCRC } from '@/lib/utils'
+import { useCurrency } from '@/hooks/useCurrency'
 import toast from 'react-hot-toast'
 
 const METHOD_CFG: Record<string, { label: string; color: string; icon: any }> = {
@@ -29,6 +29,7 @@ interface Props {
 }
 
 export default function CloseCashRegisterModal({ registerId, onClose, onClosed }: Props) {
+    const { format } = useCurrency()
     const [closing, setClosing] = useState(false)
     const [closingAmount, setClosingAmount] = useState('')
     const [notes, setNotes] = useState('')
@@ -105,12 +106,12 @@ export default function CloseCashRegisterModal({ registerId, onClose, onClosed }
                             display: 'flex', flexDirection: 'column', gap: '8px',
                         }}>
                             {[
-                                { label: 'Total ventas', value: formatCRC(Number(result?.totalSales ?? 0)), color: 'var(--accent)' },
-                                { label: 'Monto esperado', value: formatCRC(Number(result?.expectedAmount ?? 0)), color: 'var(--info)' },
-                                { label: 'Monto contado', value: formatCRC(Number(result?.closingAmount ?? 0)), color: 'var(--text-primary)' },
+                                { label: 'Total ventas', value: format(Number(result?.totalSales ?? 0)), color: 'var(--accent)' },
+                                { label: 'Monto esperado', value: format(Number(result?.expectedAmount ?? 0)), color: 'var(--info)' },
+                                { label: 'Monto contado', value: format(Number(result?.closingAmount ?? 0)), color: 'var(--text-primary)' },
                                 {
                                     label: 'Diferencia',
-                                    value: formatCRC(Math.abs(Number(result?.difference ?? 0))),
+                                    value: format(Math.abs(Number(result?.difference ?? 0))),
                                     color: Math.abs(Number(result?.difference ?? 0)) === 0
                                         ? 'var(--success)'
                                         : 'var(--danger)',
@@ -181,7 +182,7 @@ export default function CloseCashRegisterModal({ registerId, onClose, onClosed }
                                         {[
                                             {
                                                 label: 'Total ventas',
-                                                value: formatCRC(Number(summary?.totalSales ?? 0)),
+                                                value: format(Number(summary?.totalSales ?? 0)),
                                                 color: 'var(--accent)',
                                                 icon: <TrendingUp size={14} />,
                                                 mono: true,
@@ -194,7 +195,7 @@ export default function CloseCashRegisterModal({ registerId, onClose, onClosed }
                                             },
                                             {
                                                 label: 'Monto inicial',
-                                                value: formatCRC(Number(summary?.register?.openingAmount ?? 0)),
+                                                value: format(Number(summary?.register?.openingAmount ?? 0)),
                                                 color: 'var(--text-secondary)',
                                                 icon: <Banknote size={14} />,
                                                 mono: true,
@@ -256,7 +257,7 @@ export default function CloseCashRegisterModal({ registerId, onClose, onClosed }
                                                             <span style={{
                                                                 fontFamily: 'var(--font-mono)', fontWeight: 700, color: cfg.color,
                                                             }}>
-                                                                {formatCRC(Number(m._sum?.total ?? 0))}
+                                                                {format(Number(m._sum?.total ?? 0))}
                                                             </span>
                                                         </div>
                                                     )
@@ -323,7 +324,7 @@ export default function CloseCashRegisterModal({ registerId, onClose, onClosed }
                                                             fontFamily: 'var(--font-mono)', fontWeight: 700,
                                                             fontSize: '15px', color: 'var(--danger)',
                                                         }}>
-                                                            {formatCRC(Math.abs(difference))}
+                                                            {format(Math.abs(difference))}
                                                         </span>
                                                     )}
                                                 </div>
@@ -332,7 +333,7 @@ export default function CloseCashRegisterModal({ registerId, onClose, onClosed }
                                                         marginTop: '6px', fontSize: '11px',
                                                         color: 'var(--text-secondary)',
                                                     }}>
-                                                        Esperado: {formatCRC(expected)} · Contado: {formatCRC(closingNum)}
+                                                        Esperado: {format(expected)} · Contado: {format(closingNum)}
                                                     </div>
                                                 )}
                                             </div>

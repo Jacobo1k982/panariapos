@@ -7,7 +7,7 @@ import {
     TrendingUp, Hash
 } from 'lucide-react'
 import { useSales, useDailySummary } from '@/hooks/useSales'
-import { formatCRC } from '@/lib/utils'
+import { useCurrency } from '@/hooks/useCurrency'
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 const METHOD_CFG: Record<string, { label: string; color: string; icon: any }> = {
@@ -35,6 +35,8 @@ function thisMonth() {
 
 // ─── Componente principal ─────────────────────────────────────────────────────
 export default function SalesPage() {
+    const { format } = useCurrency()
+
     const [search, setSearch] = useState('')
     const [from, setFrom] = useState(thisMonth())
     const [to, setTo] = useState(today())
@@ -89,7 +91,7 @@ export default function SalesPage() {
                     {[
                         {
                             label: 'Ingresos hoy',
-                            value: formatCRC(summary?.totalRevenue ?? 0),
+                            value: format(summary?.totalRevenue ?? 0),
                             color: 'var(--accent)',
                             mono: true,
                             icon: <TrendingUp size={13} />,
@@ -108,7 +110,7 @@ export default function SalesPage() {
                         },
                         {
                             label: 'Total filtrado',
-                            value: formatCRC(totalFiltered),
+                            value: format(totalFiltered),
                             color: 'var(--text-primary)',
                             mono: true,
                             icon: <TrendingUp size={13} />,
@@ -356,7 +358,7 @@ export default function SalesPage() {
                                                 fontFamily: 'var(--font-mono)', fontWeight: 700,
                                                 fontSize: '15px', color: 'var(--accent)',
                                             }}>
-                                                {formatCRC(Number(sale.total))}
+                                                {format(Number(sale.total))}
                                             </div>
                                             {Number(sale.discount) > 0 && (
                                                 <div style={{ fontSize: '10px', color: 'var(--text-muted)', marginTop: '1px' }}>
@@ -480,7 +482,7 @@ export default function SalesPage() {
                                             {line.productName}
                                         </div>
                                         <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
-                                            {Number(line.quantity)} × {formatCRC(Number(line.unitPrice))}
+                                            {Number(line.quantity)} × {format(Number(line.unitPrice))}
                                             {Number(line.discount) > 0 && (
                                                 <span style={{ color: 'var(--accent)', marginLeft: 6 }}>
                                                     −{line.discount}%
@@ -492,7 +494,7 @@ export default function SalesPage() {
                                         fontFamily: 'var(--font-mono)', fontWeight: 600,
                                         fontSize: '14px', flexShrink: 0,
                                     }}>
-                                        {formatCRC(Number(line.subtotal))}
+                                        {format(Number(line.subtotal))}
                                     </span>
                                 </div>
                             ))}
@@ -512,7 +514,7 @@ export default function SalesPage() {
                             }}>
                                 <span>Subtotal</span>
                                 <span style={{ fontFamily: 'var(--font-mono)' }}>
-                                    {formatCRC(Number(selected.subtotal))}
+                                    {format(Number(selected.subtotal))}
                                 </span>
                             </div>
 
@@ -523,7 +525,7 @@ export default function SalesPage() {
                                 }}>
                                     <span>Descuento ({selected.discount}%)</span>
                                     <span style={{ fontFamily: 'var(--font-mono)' }}>
-                                        −{formatCRC(Number(selected.subtotal) - Number(selected.total))}
+                                        −{format(Number(selected.subtotal) - Number(selected.total))}
                                     </span>
                                 </div>
                             )}
@@ -538,7 +540,7 @@ export default function SalesPage() {
                                     fontFamily: 'var(--font-mono)', fontWeight: 700,
                                     fontSize: '22px', color: 'var(--accent)',
                                 }}>
-                                    {formatCRC(Number(selected.total))}
+                                    {format(Number(selected.total))}
                                 </span>
                             </div>
                         </div>
