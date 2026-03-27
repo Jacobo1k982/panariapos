@@ -31,6 +31,7 @@ const TIMEZONES = [
     { value: 'America/Panama',      label: '🇵🇦 Panamá',        currency: 'PAB' },
     { value: 'America/Belize',      label: '🇧🇿 Belice',        currency: 'BZD' },
     { value: 'America/New_York',    label: '🇺🇸 Estados Unidos', currency: 'USD' },
+    { value: 'America/Puerto_Rico', label: '🇵🇷 Puerto Rico', currency: 'USD' },
 ]
 
 const EMPTY: Form = {
