@@ -493,14 +493,19 @@ export default function RegisterPage() {
                 </div>
 
                 {/* Footer */}
-                <p style={{ textAlign: 'center', fontSize: '11px', color: 'var(--text-muted)', marginTop: '16px' }}>
+                <div style={{
+                    textAlign: 'center', fontSize: '11px', color: 'var(--text-muted)',
+                    marginTop: '16px', position: 'relative', zIndex: 2,
+                }}>
                     ¿Ya tenés cuenta?{' '}
-                    <Link href="/login" style={{ color: 'var(--accent)', textDecoration: 'none', fontWeight: 500 }}>
+                    <Link href="/login" style={{
+                        color: 'var(--accent)', textDecoration: 'none', fontWeight: 500,
+                        display: 'inline-block', padding: '4px 2px',
+                    }}>
                         Iniciá sesión
                     </Link>
-                </p>
+                </div>
             </div>
-
             <style>{`
         @keyframes spin   { to { transform: rotate(360deg) } }
         @keyframes fadeIn { from { opacity:0; transform:translateY(8px) } to { opacity:1; transform:translateY(0) } }

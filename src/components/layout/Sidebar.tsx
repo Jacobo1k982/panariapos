@@ -16,13 +16,13 @@ const NAV = [
     { href: '/pos', icon: ShoppingCart, label: 'POS' },
     { href: '/products', icon: Package, label: 'Productos' },
     { href: '/sales', icon: ShoppingBag, label: 'Ventas' },
+    { href: '/customers', icon: Users, label: 'Clientes' },
     { href: '/inventory', icon: Package, label: 'Inventario' },
     { href: '/production', icon: ChefHat, label: 'Producción' },
-    { href: '/customers', icon: Users, label: 'Clientes' },
     { href: '/suppliers', icon: Truck, label: 'Proveedores' },
     { href: '/reports', icon: BarChart3, label: 'Reportes' },
-    { href: '/settings', icon: Settings, label: 'Config' },
     { href: '/quotes', icon: FileText, label: 'Cotizaciones' },
+    { href: '/settings', icon: Settings, label: 'Config' },
 ]
 
 export default function Sidebar() {
