@@ -1,4 +1,4 @@
-import { Controller, Get, Patch, Body, Param, UseGuards } from '@nestjs/common'
+import { Controller, Get, Patch, Body, Param, Query, UseGuards } from '@nestjs/common'
 import { JwtAuthGuard }  from '../auth/guards/jwt.guard'
 import { RolesGuard }    from '../auth/guards/roles.guard'
 import { Roles }         from '../auth/decorators/roles.decorator'
@@ -135,6 +135,32 @@ export class AdminController {
         ])
 
         return { recentLogins, recentRegistrations, loginsByDay, registrationsByDay }
+    }
+
+    // ── Users ────────────────────────────────────────────────────────────────
+    @Get('users')
+    async getAllUsers(
+        @Query('role')   role?:   string,
+        @Query('active') active?: string,
+    ) {
+        return this.prisma.user.findMany({
+            where: {
+                role:   role   ? role as any   : undefined,
+                active: active !== undefined ? active === 'true' : undefined,
+            },
+            orderBy: { createdAt: 'desc' },
+            select: {
+                id:        true,
+                name:      true,
+                email:     true,
+                role:      true,
+                active:    true,
+                lastLogin: true,
+                createdAt: true,
+                tenant:    { select: { id: true, name: true, plan: true } },
+                branch:    { select: { id: true, name: true } },
+            },
+        })
     }
 
     // ── Tenants ──────────────────────────────────────────────────────────────
